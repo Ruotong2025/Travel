@@ -23,9 +23,61 @@
 | Bootstrap        | 4.x/5.x (响应式框架)   |
 
 ### 开发工具
-| 工具              | 用途                   |
-|-------------------|------------------------|
-| Apache Maven     | 3.9.9 (项目管理)       |
-| Git              | 版本控制               |
-| GitHub           | 代码托管               |
-| Navicat          | 数据库管理             |
+| 工具              | 用途                   | 版本/配置说明          |
+|-------------------|------------------------|-----------------------|
+| IntelliJ IDEA    | 开发IDE                | 2021.x+ (Ultimate版) |
+| Apache Maven     | 项目管理               | 3.9.9                |
+| Git              | 版本控制               | 2.x+                 |
+| GitHub           | 代码托管               | -                    |
+| Navicat          | 数据库管理             | Premium 15+          |
+| Apache Tomcat    | 本地开发服务器         | 9.0.102              |
+
+## IDEA集成Tomcat配置指南
+
+### 1. 运行环境配置
+1. **配置SDK**：
+   - File → Project Structure → SDKs
+   - 添加JDK 1.8路径
+
+2. **配置Tomcat**：
+   - Run → Edit Configurations
+   - 点击"+" → 选择Tomcat Server → Local
+   - 指定Tomcat 9.0.102安装目录
+   - 端口配置（默认8080）
+
+# 项目开发环境配置规范
+
+## 一、开发工具要求
+1. **强制使用工具**：
+   - 主IDE：IntelliJ IDEA（推荐2021.3+版本）
+   - 版本控制：Git
+   - 构建工具：Maven 3.9.9
+   - 数据库工具：Navicat Premium
+   - 缓存工具：Redis Desktop Manager
+
+## 二、环境配置步骤
+
+### 1. Maven配置
+```xml
+<!-- 必须配置的阿里云镜像（settings.xml） -->
+<mirror>
+  <id>aliyunmaven</id>
+  <mirrorOf>*</mirrorOf>
+  <name>阿里云公共仓库</name>
+  <url>https://maven.aliyun.com/repository/public</url>
+</mirror>
+
+<!-- IDEA配置路径 -->
+File > Settings > Build > Maven
+- Maven home path: D:/apache-maven-3.9.9
+- User settings file: D:/apache-maven-3.9.9/conf/settings.xml
+
+<!-- server.xml 关键配置 -->
+<Context path="" docBase="ForestBlog" reloadable="true"/>
+
+<!-- tomacat配置要求 -->
+1. Edit Configurations > Tomcat Server > Local
+2. Deployment选项卡：
+   - Application context: 必须设置为 "/"
+   - Deploy at server startup: 选择项目war包
+![image](https://github.com/user-attachments/assets/61d925e0-4784-412a-98b4-cc5ceb705f39)
