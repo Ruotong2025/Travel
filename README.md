@@ -57,7 +57,15 @@
 
 ## 二、环境配置步骤
 
-### 1. Maven配置
+### 1.tomacat配置要求
+1. Edit Configurations > Tomcat Server > Local
+2. Deployment选项卡：
+   - Application context: 必须设置为 "/"
+   - Deploy at server startup: 选择项目war包
+
+![图片描述](uploads/img.png)
+
+### 2. Maven配置
 ```xml
 <!-- 必须配置的阿里云镜像（settings.xml） -->
 <mirror>
@@ -66,18 +74,3 @@
   <name>阿里云公共仓库</name>
   <url>https://maven.aliyun.com/repository/public</url>
 </mirror>
-
-<!-- IDEA配置路径 -->
-File > Settings > Build > Maven
-- Maven home path: D:/apache-maven-3.9.9
-- User settings file: D:/apache-maven-3.9.9/conf/settings.xml
-
-<!-- server.xml 关键配置 -->
-<Context path="" docBase="ForestBlog" reloadable="true"/>
-
-<!-- tomacat配置要求 -->
-1. Edit Configurations > Tomcat Server > Local
-2. Deployment选项卡：
-   - Application context: 必须设置为 "/"
-   - Deploy at server startup: 选择项目war包
-![image](https://github.com/user-attachments/assets/61d925e0-4784-412a-98b4-cc5ceb705f39)
