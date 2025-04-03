@@ -41,7 +41,7 @@ public class IndexController {
     @Autowired
     private CommentService commentService;
 
-    @RequestMapping(value = {"/", "/article"})
+    @RequestMapping("/article")
     public String index(@RequestParam(required = false, defaultValue = "1") Integer pageIndex,
                         @RequestParam(required = false, defaultValue = "10") Integer pageSize, Model model) {
         HashMap<String, Object> criteria = new HashMap<>(1);
