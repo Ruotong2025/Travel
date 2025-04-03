@@ -104,15 +104,9 @@ public class AdminController {
         String password = request.getParameter("password");
         String rememberme = request.getParameter("rememberme");
         User user = userService.getUserByNameOrEmail(username);
-        if (user == null) {
+        if (user == null || !user.getUserPass().equals(password) || user.getUserStatus() == 0) {
             map.put("code", 0);
-            map.put("msg", "用户名无效！");
-        } else if (!user.getUserPass().equals(password)) {
-            map.put("code", 0);
-            map.put("msg", "密码错误！");
-        } else if (user.getUserStatus() == 0) {
-            map.put("code", 0);
-            map.put("msg", "账号已禁用！");
+            map.put("msg", "The email address or password is incorrect2");
         } else {
             //登录成功
             map.put("code", 1);
@@ -154,11 +148,11 @@ public class AdminController {
         String password = request.getParameter("password");
         User checkUserName = userService.getUserByName(username);
         if (checkUserName != null) {
-            return new JsonResult().fail("用户名已存在");
+            return new JsonResult().fail("The user name already exists");
         }
-        User checkEmail = userService.getUserByEmail(username);
+        User checkEmail = userService.getUserByEmail(email);
         if (checkEmail != null) {
-            return new JsonResult().fail("电子邮箱已存在");
+            return new JsonResult().fail("The email address already exists");
         }
 
         // 添加用户
@@ -175,9 +169,9 @@ public class AdminController {
             userService.insertUser(user);
         } catch (Exception e) {
             e.printStackTrace();
-            return new JsonResult().fail("系统异常");
+            return new JsonResult().fail("System exception");
         }
-        return new JsonResult().ok("注册成功");
+        return new JsonResult().ok("Registered successfully");
     }
 
     /**

@@ -2,11 +2,11 @@
          pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${options.optionSiteTitle} &lsaquo; 登录</title>
+    <title>${options.optionSiteTitle} &lsaquo; Login</title>
     <link rel="stylesheet" href="/plugin/font-awesome/css/font-awesome.min.css">
     <link rel="shortcut icon" href="/img/logo.png">
     <link rel="stylesheet" href="/plugin/login/dashicons.min.css">
@@ -17,38 +17,42 @@
     <link rel="stylesheet" href="/css/login.css">
     <meta name='robots' content='noindex,follow' />
 </head>
-<body class="login login-action-login wp-core-ui locale-zh-cn">
+<body class="login login-action-login wp-core-ui locale-en">
 <div id="login">
     <h1><a href="/" title="Welcome to TravelTribe" tabindex="-1">${options.optionSiteTitle}</a></h1>
     <%
         String username = "";
         String password = "";
         Cookie[] cookies = request.getCookies();
-        for (int i = 0; i < cookies.length; i++) {
-            if ("username".equals(cookies[i].getName())) {
-                username = cookies[i].getValue();
-            } else if ("password".equals(cookies[i].getName())) {
-                password = cookies[i].getValue();
+        if (cookies != null) {
+            for (int i = 0; i < cookies.length; i++) {
+                if ("username".equals(cookies[i].getName())) {
+                    username = cookies[i].getValue();
+                } else if ("password".equals(cookies[i].getName())) {
+                    password = cookies[i].getValue();
+                }
             }
         }
     %>
     <form name="loginForm" id="loginForm" method="post">
         <p>
-            <label for="user_login">email<br />
-                <input type="text" name="username" id="user_login" class="input" value="<%=username%>" size="20" required/></label>
+            <label for="user_login">Email<br />
+                <input type="email" name="username" id="user_login" class="input" value="<%=username%>" size="20" required/></label>
+            <span id="emailError" class="error-message">Please enter a valid email address</span>
         </p>
         <p>
-            <label for="user_pass">password<br />
+            <label for="user_pass">Password<br />
                 <input type="password" name="password" id="user_pass" class="input" value="<%=password%>" size="20" required/>
             </label>
+            <span id="passwordError" class="error-message">Please enter your password</span>
         </p>
         <p class="forgetmenot">
             <label for="rememberme">
-                <input name="rememberme" type="checkbox" id="rememberme" value="1" checked /> 记住密码
+                <input name="rememberme" type="checkbox" id="rememberme" value="1" checked /> Remember me
             </label>
         </p>
         <p class="submit">
-            <input type="button" name="wp-submit" id="submit-btn" class="button button-primary button-large" value="登录" />
+            <input type="button" name="wp-submit" id="submit-btn" class="button button-primary button-large" value="Log In" />
         </p>
     </form>
 
@@ -65,39 +69,80 @@
         wp_attempt_focus();
         if(typeof wpOnload=='function')wpOnload();
     </script>
-    <p id="backtoblog"><a href="/">&larr; 返回到风吟博客</a> | <a href="/register">注册</a></p>
+    <p id="backtoblog"><a href="/">&larr; Back to TravelTribe</a> | <a href="/register">Register</a></p>
 </div>
 
 <script src="/js/jquery.min.js"></script>
 <script type="text/javascript">
-    $("#submit-btn").click(function () {
-        var user = $("#user_login").val();
-        var password = $("#user_pass").val();
-        if(user=="") {
-            alert("用户名不可为空!");
-        } else if(password==""){
-            alert("密码不可为空!");
-        } else {
+    $(document).ready(function() {
+        // Email validation function
+        function validateEmail(email) {
+            const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            return re.test(String(email).toLowerCase());
+        }
+
+        $("#submit-btn").click(function () {
+            // Reset error messages
+            $(".error-message").hide();
+            $(".input").removeClass("input-error");
+
+            var user = $("#user_login").val().trim();
+            var password = $("#user_pass").val().trim();
+            var isValid = true;
+
+            // Validate email
+            if(user === "") {
+                $("#emailError").text("Email cannot be empty!").show();
+                $("#user_login").addClass("input-error");
+                isValid = false;
+            } else if(!validateEmail(user)) {
+                $("#emailError").text("Please enter a valid email address!").show();
+                $("#user_login").addClass("input-error");
+                isValid = false;
+            }
+
+            // Validate password
+            if(password === "") {
+                $("#passwordError").text("Password cannot be empty!").show();
+                $("#user_pass").addClass("input-error");
+                isValid = false;
+            }
+
+            if(!isValid) {
+                return false;
+            }
+
+            // Disable button to prevent duplicate submissions
+            $("#submit-btn").prop("disabled", true).val("Logging in...");
+
             $.ajax({
-                async: false,
                 type: "POST",
                 url: '/loginVerify',
-                contentType: "application/x-www-form-urlencoded; charset=utf-8",
                 data: $("#loginForm").serialize(),
                 dataType: "json",
                 success: function (data) {
-                    if(data.code==0) {
+                    if(data.code == 0) {
                         alert(data.msg);
                     } else {
-                        window.location.href="/admin";
+                        window.location.href = data.redirectUrl || "/admin";
                     }
                 },
-                error: function () {
-                    alert("数据获取失败")
+                error: function (xhr, status, error) {
+                    alert("Login failed: " + (xhr.responseJSON?.msg || "Please try again later"));
+                },
+                complete: function() {
+                    $("#submit-btn").prop("disabled", false).val("Log In");
                 }
-            })
-        }
-    })
+            });
+        });
+
+        // Submit form on Enter key press
+        $("#loginForm").keypress(function(e) {
+            if(e.which == 13) {
+                $("#submit-btn").click();
+            }
+        });
+    });
 </script>
 </body>
 </html>
