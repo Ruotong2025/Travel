@@ -70,7 +70,7 @@ public class HomeResourceInterceptor implements HandlerInterceptor {
         request.setAttribute("lastUpdateArticle", lastUpdateArticle);
 
         //页脚显示
-        //博客基本信息显示(Options)
+        //旅游网站基本信息显示(Options)
         Options options = optionsService.getOptions();
         request.setAttribute("options", options);
         return true;

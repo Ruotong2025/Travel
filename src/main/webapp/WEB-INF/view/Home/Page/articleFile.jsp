@@ -32,7 +32,7 @@
 </rapid:override>
 
 <rapid:override name="left">
-    <%--博客主体-左侧正文 start--%>
+    <%--旅游网站主体-左侧正文 start--%>
     <section id="primary" class="content-area">
         <main id="main" class="site-main" role="main">
             <ul class="search-page">

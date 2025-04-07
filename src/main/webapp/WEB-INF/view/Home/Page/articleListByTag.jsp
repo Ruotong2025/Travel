@@ -38,7 +38,7 @@
 
 
 <rapid:override name="left">
-    <%--博客主体-左侧正文 start--%>
+    <%--旅游网站主体-左侧正文 start--%>
     <div id="primary" class="content-area">
         <main id="main" class="site-main">
             <c:choose>
@@ -131,7 +131,7 @@
         <%@ include file="../Public/part/paging.jsp" %>
 
     </div>
-    <%--  博客主体-左侧正文 end--%>
+    <%--  旅游网站主体-左侧正文 end--%>
 </rapid:override>
 
 <%@ include file="../Public/framework.jsp" %>

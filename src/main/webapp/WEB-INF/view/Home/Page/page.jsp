@@ -22,7 +22,7 @@
 </rapid:override>
 
 <rapid:override name="left">
-    <%--博客主体-左侧文章正文 start--%>
+    <%--旅游网站主体-左侧文章正文 start--%>
     <div id="primary" class="content-area">
         <main id="main" class="site-main" role="main">
             <article class="post" >
@@ -66,7 +66,7 @@
         </main>
         <!-- .site-main -->
     </div>
-    <%--博客主体-左侧文章正文end--%>
+    <%--旅游网站主体-左侧文章正文end--%>
 </rapid:override>
 <%--侧边栏 start--%>
 <rapid:override name="right">

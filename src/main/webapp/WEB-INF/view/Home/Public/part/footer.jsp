@@ -1,5 +1,5 @@
 <%--
-    博客页脚部分
+    旅游网站页脚部分
     包括：页脚部分
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"

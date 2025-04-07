@@ -48,7 +48,7 @@
 
 
 <rapid:override name="left">
-    <%--博客主体-左侧文章正文 start--%>
+    <%--旅游网站主体-左侧文章正文 start--%>
     <div id="primary" class="content-area">
         <main id="main" class="site-main" role="main">
             <article class="post" id="articleDetail" data-id="${article.articleId}">
@@ -68,7 +68,7 @@
                             <li><img src="/img/weixin.jpg"></li>
                         </ul>
                         <ul class="weimg2">
-                            <li><strong>博客交流群</strong></li>
+                            <li><strong>旅游网站交流群</strong></li>
                             <li>海纳百川，大家来水</li>
                             <li><img src="/img/qqGroup.jpg" alt="weinxin"></li>
                         </ul>
@@ -443,7 +443,7 @@
         </main>
         <!-- .site-main -->
     </div>
-    <%--博客主体-左侧文章正文end--%>
+    <%--旅游网站主体-左侧文章正文end--%>
 </rapid:override>
 
 

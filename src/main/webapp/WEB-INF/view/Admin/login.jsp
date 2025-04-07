@@ -69,7 +69,7 @@
         wp_attempt_focus();
         if(typeof wpOnload=='function')wpOnload();
     </script>
-    <p id="backtoblog"><a href="/">&larr; Back to TravelTribe</a> | <a href="/register">Register</a></p>
+    <p id="backtoblog"><a href="/article">&larr; Back to TravelTribe</a> | <a href="/register">Register</a></p>
 </div>
 
 <script src="/js/jquery.min.js"></script>
@@ -124,7 +124,7 @@
                     if(data.code == 0) {
                         alert(data.msg);
                     } else {
-                        window.location.href = data.redirectUrl || "/admin";
+                        window.location.href = data.redirectUrl || "/article";
                     }
                 },
                 error: function (xhr, status, error) {

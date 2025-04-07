@@ -1,5 +1,5 @@
 <%--
-    博客顶部部分
+    旅游网站顶部部分
     包括：顶部菜单，主要菜单(包括搜索按钮)，面包屑
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -13,10 +13,10 @@
             <div class="user-login">
                 <c:choose>
                     <c:when test="${sessionScope.user==null}">
-                        <a href="/login">登录</a> | <a href="/register">注册</a>
+                        <a href="/login">Login</a> | <a href="/register">Register</a>
                     </c:when>
                     <c:otherwise>
-                        <a href="/admin">进入后台</a>
+                        <a href="/admin">Welcom ${sessionScope.user.userName}</a>
                     </c:otherwise>
                 </c:choose>
             </div>

@@ -5,7 +5,7 @@
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
-<%--博客主体-右侧侧边栏 start--%>
+<%--旅游网站主体-右侧侧边栏 start--%>
 <div id="sidebar" class="widget-area all-sidebar"
      style="position: relative; overflow: visible; box-sizing: border-box; min-height: 1px;">
 
@@ -58,7 +58,7 @@
                     </li>
                 </ul>
                 <div class="about-inf">
-                    <span class="about-pn">文章 ${siteBasicStatistics[0]} </span>
+                    <span class="about-pn">游记 ${siteBasicStatistics[0]} </span>
                     <span class="about-cn">留言 ${siteBasicStatistics[1]} </span>
                 </div>
             </div>
@@ -138,4 +138,4 @@
 
 
 
-<%--博客主体-右侧侧边栏 end--%>
+<%--旅游网站主体-右侧侧边栏 end--%>

@@ -27,7 +27,7 @@
 
     <div id="content" class="site-content" style="transform: none;" >
 
-        <%--博客主体-左侧正文 start--%>
+        <%--旅游网站主体-左侧正文 start--%>
         <div id="primary" class="content-area">
             <main id="main" class="site-main" role="main">
 
@@ -56,7 +56,7 @@
             </main><!-- .site-main -->
 
         </div>
-      <%--  博客主体-左侧正文 end--%>
+      <%--  旅游网站主体-左侧正文 end--%>
 
 
         <div class="clear"></div>
