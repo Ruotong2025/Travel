@@ -1,8 +1,8 @@
 package com.travel.ssm.blog.enums;
 
 /**
- * @author 言曌
- * @date 2018/11/17 下午4:47
+ * @author Laura
+ * @date 2025/4/17 下午4:47
  */
 
 public enum ArticleCommentStatus {

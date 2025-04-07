@@ -7,8 +7,8 @@ import java.io.Serializable;
 /**
  * 文章和标签关联
  *
- * @author 言曌
- * @date 2018/11/17 下午5:20
+ * @author Laura
+ * @date 2025/4/17 下午5:20
  */
 @Data
 public class ArticleTagRef implements Serializable {

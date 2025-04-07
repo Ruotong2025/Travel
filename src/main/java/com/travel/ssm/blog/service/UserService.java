@@ -5,8 +5,8 @@ import com.travel.ssm.blog.entity.User;
 import java.util.List;
 
 /**
- * @author 言曌
- * @date 2017/8/24
+ * @author Laura
+ * @date 2025/4/24
  */
 
 public interface UserService {

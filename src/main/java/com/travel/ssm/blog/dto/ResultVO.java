@@ -3,8 +3,8 @@ package com.travel.ssm.blog.dto;
 import lombok.Data;
 
 /**
- * @author 言曌
- * @date 2017/11/30 下午7:04
+ * @author Laura
+ * @date 2025/4/30 下午7:04
  */
 
 @Data
