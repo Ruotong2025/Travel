@@ -5,8 +5,8 @@
 ### 后端技术
 | 组件               | 版本/说明               |
 |--------------------|------------------------|
-| JDK               | 1.8.x (推荐)           |
-| Apache Tomcat     | 9.0.102                |
+| JDK               | 1.8.x (一定 不然版本冲突)           |
+| Apache Tomcat     | 9.0.102（一定 不然版本冲突）                |
 | Spring Framework  | 4.3.19.RELEASE        |
 | Spring MVC        | 4.3.19.RELEASE        |
 | MyBatis           | 3.4.x/3.5.x           |
