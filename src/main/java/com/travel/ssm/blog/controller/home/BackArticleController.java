@@ -66,7 +66,13 @@ public class BackArticleController {
         }
         PageInfo<Article> articlePageInfo = articleService.pageArticle(pageIndex, pageSize, criteria);
         model.addAttribute("pageInfo", articlePageInfo);
-        return "Admin/Article/index";
+
+        //侧边栏显示
+        //获得热评文章
+        List<Article> mostCommentArticleList = articleService.listArticleByCommentCount(8);
+        model.addAttribute("mostCommentArticleList", mostCommentArticleList);
+
+        return "Home/Article/index";
     }
 
 
@@ -85,7 +91,7 @@ public class BackArticleController {
         //获得热评文章
         List<Article> mostCommentArticleList = articleService.listArticleByCommentCount(8);
         model.addAttribute("mostCommentArticleList", mostCommentArticleList);
-        return "Home/Page/Article/insert";
+        return "Home/Article/insert";
     }
 
     /**
@@ -135,7 +141,7 @@ public class BackArticleController {
         article.setTagList(tagList);
 
         articleService.insertArticle(article);
-        return "redirect:/admin/article";
+        return "redirect:/Home/index";
     }
 
 
@@ -186,7 +192,12 @@ public class BackArticleController {
         List<Tag> tagList = tagService.listTag();
         model.addAttribute("tagList", tagList);
 
-        return "Admin/Article/edit";
+        //侧边栏显示
+        //获得热评文章
+        List<Article> mostCommentArticleList = articleService.listArticleByCommentCount(8);
+        model.addAttribute("mostCommentArticleList", mostCommentArticleList);
+
+        return "Home/Article/edit";
     }
 
 
@@ -241,7 +252,7 @@ public class BackArticleController {
         }
         article.setTagList(tagList);
         articleService.updateArticleDetail(article);
-        return "redirect:/admin/article";
+        return "redirect:Home/article";
     }
 
     /**
