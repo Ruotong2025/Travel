@@ -1,21 +1,23 @@
-package com.travel.ssm.blog.controller.admin;
+package com.travel.ssm.blog.controller.home;
 
 import cn.hutool.http.HtmlUtil;
 import com.github.pagehelper.PageInfo;
 import com.travel.ssm.blog.dto.ArticleParam;
 import com.travel.ssm.blog.entity.Article;
+import com.travel.ssm.blog.entity.Category;
+import com.travel.ssm.blog.entity.Tag;
+import com.travel.ssm.blog.entity.User;
 import com.travel.ssm.blog.enums.UserRole;
 import com.travel.ssm.blog.service.ArticleService;
 import com.travel.ssm.blog.service.CategoryService;
 import com.travel.ssm.blog.service.TagService;
-
-import com.travel.ssm.blog.entity.Category;
-import com.travel.ssm.blog.entity.Tag;
-import com.travel.ssm.blog.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -79,7 +81,11 @@ public class BackArticleController {
         List<Tag> tagList = tagService.listTag();
         model.addAttribute("categoryList", categoryList);
         model.addAttribute("tagList", tagList);
-        return "Admin/Article/insert";
+        //侧边栏显示
+        //获得热评文章
+        List<Article> mostCommentArticleList = articleService.listArticleByCommentCount(8);
+        model.addAttribute("mostCommentArticleList", mostCommentArticleList);
+        return "Home/Page/Article/insert";
     }
 
     /**

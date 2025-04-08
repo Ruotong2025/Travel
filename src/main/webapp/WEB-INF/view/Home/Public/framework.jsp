@@ -17,6 +17,9 @@
     <meta name="MobileOptimized" content="width"/>
     <meta name="HandheldFriendly" content="true"/>
     <link rel="shortcut icon" href="/img/logo.png">
+    <link rel="stylesheet" href="/plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
     <rapid:block name="description">
         <meta name="description" content="${options.optionMetaDescrption}"/>
     </rapid:block>

@@ -1,15 +1,19 @@
-package com.travel.ssm.blog.controller.admin;
+package com.travel.ssm.blog.controller.home;
 
 import com.travel.ssm.blog.dto.JsonResult;
 import com.travel.ssm.blog.dto.UploadFileVO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.UUID;
 
 /**
  * @author travel
@@ -19,11 +23,6 @@ import java.util.Calendar;
 @RequestMapping("/admin/upload")
 public class UploadFileController {
 
-    /**
-     * 文件保存目录，物理路径
-     */
-//    public final String rootPath = "/Users/travel/Documents/uploads";
-    public final String rootPath = "D:\\uploads";
 
     public final String allowSuffix = ".bmp.jpg.jpeg.png.gif.pdf.doc.zip.rar.gz";
 
@@ -35,38 +34,32 @@ public class UploadFileController {
      * @throws IOException
      */
     @RequestMapping(value = "/img", method = RequestMethod.POST)
-    public JsonResult uploadFile(@RequestParam("file") MultipartFile file) {
+    public JsonResult uploadFile(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+
+        /**
+         * 文件保存目录，物理路径
+         */
+        String realPath = request.getServletContext().getRealPath("/resource");
+
+        String rootPath = realPath.split("target")[0] + "src\\main\\webapp\\resource\\assets\\img\\thumbnail";  // 以 target 为分隔点
+
 
         //1.文件后缀过滤，只允许部分后缀
         //文件的完整名称,如spring.jpeg
-        String filename = file.getOriginalFilename();
-        //文件名,如spring
-        String name = filename.substring(0, filename.indexOf("."));
+        String originalFilename = file.getOriginalFilename();
         //文件后缀,如.jpeg
-        String suffix = filename.substring(filename.lastIndexOf("."));
+        String extension = originalFilename.substring(originalFilename.lastIndexOf(".")); // .jpg .png 等
+        //2.创建文件目录
+        //创建年月文件夹
 
-        if (allowSuffix.indexOf(suffix) == -1) {
+        String newFilename = UUID.randomUUID() + extension;        //文件名,如spring
+
+        if (allowSuffix.indexOf(extension) == -1) {
             return new JsonResult().fail("不允许上传该后缀的文件！");
         }
 
+        File descFile = new File(rootPath + '/' + newFilename);
 
-        //2.创建文件目录
-        //创建年月文件夹
-        Calendar date = Calendar.getInstance();
-        File dateDirs = new File(date.get(Calendar.YEAR)
-                + File.separator + (date.get(Calendar.MONTH) + 1));
-
-        //目标文件
-        File descFile = new File(rootPath + File.separator + dateDirs + File.separator + filename);
-        int i = 1;
-        //若文件存在重命名
-        String newFilename = filename;
-        while (descFile.exists()) {
-            newFilename = name + "(" + i + ")" + suffix;
-            String parentPath = descFile.getParent();
-            descFile = new File(parentPath + File.separator + newFilename);
-            i++;
-        }
         //判断目标文件所在的目录是否存在
         if (!descFile.getParentFile().exists()) {
             //如果目标文件所在的目录不存在，则创建父目录
@@ -82,11 +75,11 @@ public class UploadFileController {
             log.error("上传失败，cause:{}", e);
         }
         //完整的url
-        String fileUrl = "/uploads/" + dateDirs + "/" + newFilename;
+        String fileUrl = "/img/thumbnail" +"/" + newFilename;
 
         //4.返回URL
         UploadFileVO uploadFileVO = new UploadFileVO();
-        uploadFileVO.setTitle(filename);
+        uploadFileVO.setTitle(newFilename);
         uploadFileVO.setSrc(fileUrl);
         return new JsonResult().ok(uploadFileVO);
     }
