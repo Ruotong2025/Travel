@@ -52,6 +52,9 @@ public class ArticleController {
 
         //文章信息，分类，标签，作者，评论
         Article article = articleService.getArticleByStatusAndId(ArticleStatus.PUBLISH.getValue(), articleId);
+        Integer articleCount = article.getArticleViewCount() + 1;
+        article.setArticleViewCount(articleCount);
+        articleService.updateArticle(article);
         if (article == null) {
             return "Home/Error/404";
         }

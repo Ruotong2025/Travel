@@ -45,7 +45,7 @@
                     <i class="fa fa-search"></i>
                 </span>
             <div class="logo-site"><h1 class="site-title">
-                <a href="/" title="${options.optionSiteTitle}">${options.optionSiteTitle}</a>
+                <a href="/article" title="${options.optionSiteTitle}">${options.optionSiteTitle}</a>
             </h1>
                 <p class="site-description">${options.optionSiteDescrption}</p>
             </div><!-- .logo-site -->
@@ -61,7 +61,7 @@
                         <ul id="menu-pcmenu" class="down-menu nav-menu sf-js-enabled sf-arrows">
 
                             <li>
-                                <a href="/">
+                                <a href="/article">
                                     <i class="fa-home fa"></i>
                                     <span class="font-text">首页</span>
                                 </a>

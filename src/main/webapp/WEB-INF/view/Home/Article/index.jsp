@@ -89,11 +89,13 @@
                                                     pattern="yyyy-MM-dd HH:mm:ss"/>
                                 </td>
                                 <td>
-                                    <a href="/admin/article/edit/${a.articleId}"
-                                       class="layui-btn layui-btn-mini">编辑</a>
-                                    <a href="javascript:void(0)"
-                                       onclick="deleteArticle(${a.articleId})"
-                                       class="layui-btn layui-btn-danger layui-btn-mini">删除</a>
+                                    <div style="display: flex; gap: 6px;">
+                                        <a href="/admin/article/edit/${a.articleId}"
+                                           class="layui-btn layui-btn-mini">编辑</a>
+                                        <a href="javascript:void(0)"
+                                           onclick="deleteArticle(${a.articleId})"
+                                           class="layui-btn layui-btn-danger layui-btn-mini">删除</a>
+                                    </div>
                                 </td>
                                 <td>${a.articleId}</td>
                             </tr>
@@ -113,6 +115,7 @@
 
 <%--侧边栏 start--%>
 <rapid:override name="right">
+    <%@include file="../Public/part/sidebar-3.jsp" %>
 </rapid:override>
 <%--侧边栏 end--%>
 

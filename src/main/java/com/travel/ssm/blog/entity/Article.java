@@ -48,4 +48,11 @@ public class Article implements Serializable{
 
     private List<Category> categoryList;
 
+    private String articleDestination;
+
+    private String articleStartdate;  // 格式: yyyy/MM/dd
+    
+    private String articleEnddate;    // 格式: yyyy/MM/dd
+
+
 }

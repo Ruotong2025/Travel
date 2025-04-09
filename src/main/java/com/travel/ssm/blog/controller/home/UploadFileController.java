@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import java.sql.Timestamp;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -47,12 +48,13 @@ public class UploadFileController {
         //1.文件后缀过滤，只允许部分后缀
         //文件的完整名称,如spring.jpeg
         String originalFilename = file.getOriginalFilename();
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         //文件后缀,如.jpeg
         String extension = originalFilename.substring(originalFilename.lastIndexOf(".")); // .jpg .png 等
         //2.创建文件目录
         //创建年月文件夹
 
-        String newFilename = UUID.randomUUID() + extension;        //文件名,如spring
+        String newFilename = UUID.randomUUID() + String.valueOf(timestamp.getTime()) + extension;        //文件名,如spring
 
         if (allowSuffix.indexOf(extension) == -1) {
             return new JsonResult().fail("不允许上传该后缀的文件！");

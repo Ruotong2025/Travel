@@ -53,7 +53,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">目的地 <span style="color: #FF5722; ">*</span></label>
                     <div class="layui-input-block">
-                        <input type="text" name="destination" id="destination" autocomplete="off" placeholder="请输入目的地" class="layui-input">
+                        <input type="text" name="articleDestination" lay-verify="articleDestination" id="destination" autocomplete="off" placeholder="请输入目的地" class="layui-input" value="${article.articleDestination}">
                     </div>
                 </div>
 
@@ -61,13 +61,13 @@
                     <div style="flex: 1; margin-right: 10px;">
                         <label class="layui-form-label">开始日期 <span style="color: #FF5722;">*</span></label>
                         <div class="layui-input-block">
-                            <input type="text" name="startDate" id="startDate" autocomplete="off" placeholder="请选择开始日期" class="layui-input">
+                            <input type="text" name="articleStartdate" lay-verify="articleStartdate" id="startDate" autocomplete="off" placeholder="请选择开始日期" class="layui-input" value="${article.articleStartdate}">
                         </div>
                     </div>
                     <div style="flex: 1;">
                         <label class="layui-form-label">结束日期 <span style="color: #FF5722;">*</span></label>
                         <div class="layui-input-block">
-                            <input type="text" name="endDate" id="endDate" autocomplete="off" placeholder="请选择结束日期" class="layui-input">
+                            <input type="text" name="articleEnddate" lay-verify="articleEnddate" id="endDate" autocomplete="off" placeholder="请选择结束日期" class="layui-input" value="${article.articleEnddate}">
                         </div>
                     </div>
                 </div>
@@ -76,7 +76,7 @@
                     <label class="layui-form-label">内容 <span style="color: #FF5722; ">*</span></label>
                     <div class="layui-input-block">
                 <textarea class="layui-textarea layui-hide" name="articleContent"
-                          id="article_content">${article.articleContent}</textarea>
+                          id="article_content" lay-verify="content">${article.articleContent}</textarea>
                     </div>
                 </div>
 
@@ -85,7 +85,7 @@
                     <label class="layui-form-label">分类 <span style="color: #FF5722; ">*</span></label>
                     <div class="layui-input-inline">
                         <select name="articleParentCategoryId" id="articleParentCategoryId"
-                                lay-filter="articleParentCategoryId">
+                                lay-filter="articleParentCategoryId" lay-verify="articleParentCategoryId">
                             <option value="">一级分类</option>
                             <c:forEach items="${categoryList}" var="c">
                                 <c:if test="${c.categoryPid == 0}">
@@ -99,7 +99,7 @@
                         </select>
                     </div>
                     <div class="layui-input-inline">
-                        <select name="articleChildCategoryId" id="articleChildCategoryId" lay-filter="articleChildCategoryId">
+                        <select name="articleChildCategoryId" id="articleChildCategoryId" lay-filter="articleChildCategoryId" >
                             <c:forEach items="${categoryList}" var="c">
                                 <c:if test="${c.categoryPid == article.categoryList[0].categoryId}">
                                     <option value="${c.categoryId}"
@@ -110,20 +110,11 @@
                     </div>
                 </div>
 
-
-
-
-
-
-
-
-
-
                 <div class="layui-form-item" pane="">
-                    <label class="layui-form-label">标签</label>
+                    <label class="layui-form-label">标签<span style="color: #FF5722;">*</span></label>
                     <div class="layui-input-block">
                         <c:forEach items="${tagList}" var="t">
-                            <input type="checkbox" name="articleTagIds" lay-skin="primary" title="${t.tagName}"
+                            <input type="checkbox" name="articleTagIds" lay-verify="articleTagIds" lay-skin="primary" title="${t.tagName}"
                                    value="${t.tagId}"
                             <c:forEach items="${article.tagList}" var="t2">
                                    <c:if test="${t.tagId == t2.tagId}">checked</c:if>
@@ -140,7 +131,7 @@
                     <div class="layui-form-mid layui-word-aux">输入1-10的数字,order越大排序越前</div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">缩略图</label>
+                    <label class="layui-form-label">缩略图<span style="color: #FF5722;">*</span></label>
                     <div class="layui-input-inline">
                         <div class="layui-upload">
                             <div class="layui-upload-list" style="">
@@ -149,7 +140,7 @@
                                 <p id="demoText"></p>
                             </div>
                             <button type="button" class="layui-btn" id="test1">上传图片</button>
-                            <input type="hidden" name="articleThumbnail" id="articleThumbnail" value="${article.articleThumbnail}" >
+                            <input type="hidden" name="articleThumbnail" id="articleThumbnail" lay-verify="articleThumbnail" value="${article.articleThumbnail}" >
                         </div>
                     </div>
                 </div>
@@ -186,41 +177,9 @@
 <rapid:override name="footer-script">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="/js/article/upload.js"></script>
     <script>
-        //上传图片
-        layui.use('upload', function () {
-            var $ = layui.jquery,
-                upload = layui.upload;
-            var uploadInst = upload.render({
-                elem: '#test1',
-                url: '/admin/upload/img',
-                before: function (obj) {
-                    obj.preview(function (index, file, result) {
-                        $('#demo1').attr('src', result);
-                    });
-                },
-                done: function (res) {
-                    $("#articleThumbnail").attr("value", res.data.src);
-                    if (res.code > 0) {
-                        return layer.msg('上传失败');
-                    }
-                },
-                error: function () {
-                    var demoText = $('#demoText');
-                    demoText.html('' +
-                        '<span style="color: #FF5722;">上传失败</span>' +
-                        ' <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
-                    demoText.find('.demo-reload').on('click', function () {
-                        uploadInst.upload();
-                    });
-                }
-            });
-
-        });
-    </script>
-
-    <script>
-            layui.use(['form', 'layedit', 'laydate'], function() {
+        layui.use(['form', 'layedit', 'laydate'], function() {
             var form = layui.form
                 , layer = layui.layer
                 , layedit = layui.layedit
@@ -230,54 +189,70 @@
             //上传图片,必须放在 创建一个编辑器前面
             layedit.set({
                 uploadImage: {
-                     url: '/admin/upload/img' //接口url
+                    url: '/admin/upload/img' //接口url
                     ,type: 'post' //默认post
                 }
             });
 
-            //创建一个编辑器
-            var editIndex = layedit.build('article_content',{
-                    height:350
-                }
-            );
+            // 创建编辑器
+            var editIndex = layedit.build('article_content', {
+                height: 350
+            });
 
-            //自定义验证规则
+            // 自定义验证规则
             form.verify({
-                title: function (value) {
-                    if (value.length < 5) {
-                        return '标题至少得5个字符啊';
+                title: function(value) {
+                    if (!value.trim()) {
+                        return '标题不能为空';
+                    }
+                },
+                content: function(value) {
+                    layedit.sync(editIndex);
+                    var content = layedit.getContent(editIndex).trim();
+                    if (content.length < 20) {
+                        return '内容至少需要20个字符';
+                    }
+                },
+                // 添加自定义验证规则
+                articleParentCategoryId: function(value) {
+                    if (!value) {
+                        return '请选择一级分类';
+                    }
+                },
+                articleTagIds: function(value) {
+                    var tagChecked = $('input[name="articleTagIds"]:checked').length;
+                    if (tagChecked === 0) {
+                        return '请至少选择一个标签';
+                    }
+                },
+                articleThumbnail: function(value) {
+                    if (!value) {
+                        return '请上传缩略图';
+                    }
+                },
+                articleDestination: function(value) {
+                    if (!value.trim()) {
+                        return '目的地不能为空';
+                    }
+                },
+                articleStartdate: function(value) {
+                    if (!value.trim()) {
+                        return '请选择开始日期';
+                    }
+                },
+                articleEnddate: function(value) {
+                    if (!value.trim()) {
+                        return '请选择结束日期';
+                    }
+                    var startDate = $('#startDate').val().trim();
+                    if (startDate && value < startDate) {
+                        return '结束日期不能早于开始日期';
                     }
                 }
-                , pass: [/(.+){6,12}$/, '密码必须6到12位']
-                , content: function (value) {
-                    layedit.sync(editIndex);
-                }
             });
 
-            layedit.build('article_content', {
-                tool: [
-                    'strong' //加粗
-                    ,'italic' //斜体
-                    ,'underline' //下划线
-                    ,'del' //删除线
-                    ,'|' //分割线
-                    ,'left' //左对齐
-                    ,'center' //居中对齐
-                    ,'right' //右对齐
-                    ,'link' //超链接
-                    ,'unlink' //清除链接
-                    ,'face' //表情
-                    ,'image' //插入图片
-                    ,'code'
-                ]
-            });
-
-            layui.use('code', function(){ //加载code模块
-                layui.code();
-            });
-
-            //二级联动
-            form.on("select(articleParentCategoryId)",function () {
+            // 二级联动
+            form.on("select(articleParentCategoryId)", function() {
                 var optionstring = "";
                 var articleParentCategoryId = $("#articleParentCategoryId").val();
                 <c:forEach items="${categoryList}" var="c">
@@ -286,25 +261,23 @@
                 }
                 </c:forEach>
                 $("#articleChildCategoryId").html("<option value=''selected>二级分类</option>"+optionstring);
-                form.render('select'); //这个很重要
-            })
-
+                form.render('select');
+            });
         });
 
         $(document).ready(function() {
             // 初始化日期选择器
             $('#startDate').datepicker({
-                dateFormat: 'yy-mm-dd',  // 设置日期格式
-                minDate: 0,              // 设置开始日期不能早于今天
+                dateFormat: 'yy/mm/dd',
+                minDate: 0,
                 onSelect: function(selectedDate) {
-                    // 设置结束日期的最小日期为选择的开始日期
                     $('#endDate').datepicker('option', 'minDate', selectedDate);
                 }
             });
 
             $('#endDate').datepicker({
-                dateFormat: 'yy-mm-dd',  // 设置日期格式
-                minDate: 0               // 设置结束日期不能早于今天
+                dateFormat: 'yy/mm/dd',
+                minDate: 0
             });
         });
 

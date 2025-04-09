@@ -61,6 +61,8 @@
 <script src="/plugin/layui/layui.all.js"></script>
 
 
+
+
 <rapid:block name="footer-script"></rapid:block>
 
 </body>

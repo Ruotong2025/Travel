@@ -29,4 +29,11 @@ public class ArticleParam {
 
     private List<Integer> articleTagIds;
 
+    private String articleDestination;
+
+    private String articleStartdate;  // 格式: yyyy/MM/dd
+
+    private String articleEnddate;    // 格式: yyyy/MM/dd
+
+
 }

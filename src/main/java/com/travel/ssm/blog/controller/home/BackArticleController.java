@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import java.text.SimpleDateFormat;
+
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -103,13 +105,23 @@ public class BackArticleController {
     @RequestMapping(value = "/insertSubmit", method = RequestMethod.POST)
     public String insertArticleSubmit(HttpSession session, ArticleParam articleParam) {
         Article article = new Article();
-        //用户ID
+
+        // 用户ID
         User user = (User) session.getAttribute("user");
         if (user != null) {
             article.setArticleUserId(user.getUserId());
         }
+
         article.setArticleTitle(articleParam.getArticleTitle());
-        //文章摘要
+
+        // 目的地和日期
+        article.setArticleDestination(articleParam.getArticleDestination());
+
+        article.setArticleStartdate(articleParam.getArticleStartdate());
+
+        article.setArticleEnddate(articleParam.getArticleEnddate());
+
+        // 文章摘要
         int summaryLength = 150;
         String summaryText = HtmlUtil.cleanHtmlTag(articleParam.getArticleContent());
         if (summaryText.length() > summaryLength) {
@@ -118,19 +130,22 @@ public class BackArticleController {
         } else {
             article.setArticleSummary(summaryText);
         }
+
         article.setArticleThumbnail(articleParam.getArticleThumbnail());
         article.setArticleContent(articleParam.getArticleContent());
         article.setArticleStatus(articleParam.getArticleStatus());
-        //填充分类
+
+        // 填充分类
         List<Category> categoryList = new ArrayList<>();
-        if (articleParam.getArticleChildCategoryId() != null) {
+        if (articleParam.getArticleParentCategoryId() != null) {
             categoryList.add(new Category(articleParam.getArticleParentCategoryId()));
         }
         if (articleParam.getArticleChildCategoryId() != null) {
             categoryList.add(new Category(articleParam.getArticleChildCategoryId()));
         }
         article.setCategoryList(categoryList);
-        //填充标签
+
+        // 填充标签
         List<Tag> tagList = new ArrayList<>();
         if (articleParam.getArticleTagIds() != null) {
             for (int i = 0; i < articleParam.getArticleTagIds().size(); i++) {
@@ -140,8 +155,10 @@ public class BackArticleController {
         }
         article.setTagList(tagList);
 
+        // 插入文章
         articleService.insertArticle(article);
-        return "redirect:/Home/index";
+
+        return "redirect:/admin/article";
     }
 
 
@@ -252,7 +269,7 @@ public class BackArticleController {
         }
         article.setTagList(tagList);
         articleService.updateArticleDetail(article);
-        return "redirect:Home/article";
+        return "redirect:/article";
     }
 
     /**
