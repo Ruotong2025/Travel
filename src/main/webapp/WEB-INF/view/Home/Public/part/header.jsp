@@ -114,7 +114,7 @@
     <div class="searchbar">
         <form method="get" id="searchform" action="/search" accept-charset="UTF-8">
             <span>
-                <input type="text" value="" name="keywords" id="s" placeholder="输入搜索内容"required="">
+                <input type="text" name="keywords" id="s" placeholder="输入标题或目的地搜索" value="${param.keywords}"required="">
                 <button type="submit" id="searchsubmit">搜索</button>
             </span>
         </form>

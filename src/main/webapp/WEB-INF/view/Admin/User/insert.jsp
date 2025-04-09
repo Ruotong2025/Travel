@@ -25,12 +25,12 @@
     <blockquote class="layui-elem-quote">
          <span class="layui-breadcrumb" lay-separator="/">
               <a href="/admin">首页</a>
-              <a href="/admin/user">用户列表</a>
+              <a href="/home/user">用户列表</a>
               <a><cite>添加用户</cite></a>
         </span>
     </blockquote>
     <br><br>
-    <form class="layui-form" action="/admin/user/insertSubmit" id="userForm"
+    <form class="layui-form" action="/home/user/insertSubmit" id="userForm"
           method="post">
         <div class="layui-form-item">
             <input type="hidden" id="userId" value="0">

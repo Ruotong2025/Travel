@@ -17,8 +17,8 @@
         <result column="article_status" property="articleStatus" jdbcType="INTEGER"/>
         <result column="article_thumbnail" property="articleThumbnail" jdbcType="VARCHAR"/>
         <result column="article_destination" property="articleDestination" jdbcType="VARCHAR"/>
-        <result column="article_startdate" property="articleStartdate" jdbcType="VARCHAR"/>
-        <result column="article_enddate" property="articleEnddate" jdbcType="VARCHAR"/>
+        <result column="article_startdate" property="articleStartdate" jdbcType="TIMESTAMP"/>
+        <result column="article_enddate" property="articleEnddate" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="tb">article</sql>
@@ -47,30 +47,34 @@
         article
         <where>
             <if test="status != null">
-                article.article_status = #{status} AND
+                article.article_status = #{status}
             </if>
             <if test="keywords != null">
-                article.article_title LIKE concat(concat('%',#{keywords}),'%') AND
+                <if test="status != null">AND</if>
+                (article.article_title LIKE concat(concat('%',#{keywords}),'%') OR article.article_destination LIKE concat(concat('%',#{keywords}),'%'))
             </if>
             <if test="userId != null">
-                article.article_user_id = #{userId} AND
+                <if test="status != null or keywords != null">AND</if>
+                article.article_user_id = #{userId}
             </if>
             <if test="categoryId != null">
+                <if test="status != null or keywords != null or userId != null">AND</if>
                 article.article_id IN (
                 SELECT article_category_ref.article_id FROM article_category_ref
                 WHERE article_category_ref.category_id = #{categoryId}
-                ) AND
+                )
             </if>
             <if test="tagId != null">
+                <if test="status != null or keywords != null or userId != null or categoryId != null">AND</if>
                 article.article_id IN (
                 SELECT article_tag_ref.article_id FROM article_tag_ref
                 WHERE article_tag_ref.tag_id = #{tagId}
-                ) AND
+                )
             </if>
-            1 = 1
         </where>
         ORDER BY `article`.`article_order` DESC, `article`.`article_id` DESC
     </select>
+
 
     <delete id="deleteById" parameterType="java.lang.Integer">
         delete from
@@ -108,8 +112,8 @@
         #{articleUpdateTime,jdbcType=TIMESTAMP}, #{articleIsComment,jdbcType=INTEGER},
         #{articleStatus,jdbcType=INTEGER}, #{articleOrder,jdbcType=INTEGER},
         #{articleContent,jdbcType=LONGVARCHAR}, #{articleSummary,jdbcType=VARCHAR},
-        #{articleThumbnail,jdbcType=VARCHAR}, #{articleDestination,jdbcType=VARCHAR},
-        #{articleStartdate,jdbcType=VARCHAR}, #{articleEnddate,jdbcType=VARCHAR})
+        #{articleThumbnail,jdbcType=VARCHAR}, #{articleDestination,jdbcType=TIMESTAMP},
+        #{articleStartdate,jdbcType=VARCHAR}, #{articleEnddate,jdbcType=TIMESTAMP})
     </insert>
 
 
@@ -131,8 +135,8 @@
             <if test="articleSummary != null">article_summary = #{articleSummary,jdbcType=VARCHAR},</if>
             <if test="articleThumbnail != null">article_thumbnail = #{articleThumbnail,jdbcType=VARCHAR},</if>
             <if test="articleDestination != null">article_destination = #{articleDestination,jdbcType=VARCHAR},</if>
-            <if test="articleStartdate != null">article_startdate = #{articleStartdate,jdbcType=VARCHAR},</if>
-            <if test="articleEnddate != null">article_enddate = #{articleEnddate,jdbcType=VARCHAR},</if>
+            <if test="articleStartdate != null">article_startdate = #{articleStartdate,jdbcType=TIMESTAMP},</if>
+            <if test="articleEnddate != null">article_enddate = #{articleEnddate,jdbcType=TIMESTAMP},</if>
         </set>
         where article_id = #{articleId,jdbcType=INTEGER}
     </update>

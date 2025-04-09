@@ -2,6 +2,7 @@ package com.travel.ssm.blog.dto;
 
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,9 +32,9 @@ public class ArticleParam {
 
     private String articleDestination;
 
-    private String articleStartdate;  // 格式: yyyy/MM/dd
+    private Date articleStartdate;  // 格式: yyyy/MM/dd
 
-    private String articleEnddate;    // 格式: yyyy/MM/dd
+    private Date articleEnddate;    // 格式: yyyy/MM/dd
 
 
 }

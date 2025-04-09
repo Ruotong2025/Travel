@@ -59,7 +59,7 @@
                 <c:forEach items="${pageInfo.list}" var="a">
                     <tr>
                         <td>
-                            <a title="${a.user.userName}" href="/admin/user/edit/${a.articleUserId}" target="_blank">${a.user.userNickname}</a>
+                            <a title="${a.user.userName}" href="/home/user/edit/${a.articleUserId}" target="_blank">${a.user.userNickname}</a>
                         </td>
                         <td>
                             <a href="/article/${a.articleId}"

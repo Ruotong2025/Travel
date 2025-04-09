@@ -50,9 +50,9 @@ public class Article implements Serializable{
 
     private String articleDestination;
 
-    private String articleStartdate;  // 格式: yyyy/MM/dd
+    private Date articleStartdate;  // 格式: yyyy/MM/dd
     
-    private String articleEnddate;    // 格式: yyyy/MM/dd
+    private Date articleEnddate;    // 格式: yyyy/MM/dd
 
 
 }

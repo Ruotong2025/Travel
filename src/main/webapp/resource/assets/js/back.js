@@ -135,7 +135,7 @@ function checkUserName() {
     $.ajax({
         async: false,//同步，待请求完毕后再执行后面的代码
         type: "POST",
-        url: '/admin/user/checkUserName',
+        url: '/home/user/checkUserName',
         contentType: "application/x-www-form-urlencoded; charset=utf-8",
         data: {"username": $("#userName").val(), "id": $("#userId").val()},
         dataType: "json",
@@ -164,7 +164,7 @@ function checkUserEmail() {
     $.ajax({
         async: false,//同步，待请求完毕后再执行后面的代码
         type: "POST",
-        url: '/admin/user/checkUserEmail',
+        url: '/home/user/checkUserEmail',
         contentType: "application/x-www-form-urlencoded; charset=utf-8",
         data: {"email": $("#userEmail").val(), "id": $("#userId").val()},
         dataType: "json",

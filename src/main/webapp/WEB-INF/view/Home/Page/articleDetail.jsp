@@ -60,6 +60,22 @@
                             ${article.articleTitle}
                     </h1>
                 </header><!-- .entry-header -->
+                <!-- 目的地、开始日期和结束日期放在标题下面 -->
+                <div style="display: flex; justify-content: space-between; font-size: 14px; color: #666; margin-top: 10px;">
+                    <!-- 目的地居左 -->
+                    <div style="flex: 1; text-align: left;">
+                        目的地：${article.articleDestination}
+                    </div>
+
+                    <!-- 日期居右 -->
+                    <div style="flex: 1; text-align: right;">
+                        <fmt:formatDate value="${article.articleStartdate}" pattern="MM/yyyy" /> - <fmt:formatDate value="${article.articleEnddate}" pattern="MM/yyyy" />
+                    </div>
+                </div>
+
+                <!-- 增加一行空的div来隔开目的地和文章内容 -->
+                <div style="margin-top: 20px;"></div>
+
                 <div class="entry-content">
                     <div class="single-content">
                             ${article.articleContent}
@@ -111,6 +127,7 @@
                     <div class="clear"></div>
                 </div><!-- .entry-content -->
             </article><!-- #post -->
+
 
                 <%--所属标签 start--%>
             <div class="single-tag">

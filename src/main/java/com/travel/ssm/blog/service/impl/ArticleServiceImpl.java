@@ -174,9 +174,7 @@ public class ArticleServiceImpl implements ArticleService {
             articleList.get(i).setCategoryList(categoryList);
 
             articleList.get(i).setUser(userMapper.getUserById(articleList.get(i).getArticleUserId()));
-//            //封装TagList
-//            List<Tag> tagList = articleTagRefMapper.listTagByArticleId(articleList.get(i).getArticleId());
-//            articleList.get(i).setTagList(tagList);
+
         }
         return new PageInfo<>(articleList);
     }

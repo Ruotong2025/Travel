@@ -1,16 +1,22 @@
-package com.travel.ssm.blog.controller.admin;
+package com.travel.ssm.blog.controller.home;
 
 
+import com.travel.ssm.blog.entity.Article;
 import com.travel.ssm.blog.entity.User;
 import com.travel.ssm.blog.enums.UserRole;
+import com.travel.ssm.blog.service.ArticleService;
 import com.travel.ssm.blog.service.UserService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,39 +27,74 @@ import java.util.Map;
  * @author travel
  */
 @Controller
-@RequestMapping("/home/user")
-public class BackUserController {
+public class UserController {
 
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ArticleService articleService;
+
+
     /**
-     * 后台用户列表显示
+     * 基本信息页面显示
      *
      * @return
      */
-    @RequestMapping(value = "")
-    public ModelAndView userList() {
-        ModelAndView modelandview = new ModelAndView();
+    @RequestMapping(value = "/home/profile")
+    public ModelAndView userProfileView(HttpSession session) {
 
-        List<User> userList = userService.listUser();
-        modelandview.addObject("userList", userList);
+        ModelAndView modelAndView = new ModelAndView();
+        User sessionUser = (User) session.getAttribute("user");
+        User user = userService.getUserById(sessionUser.getUserId());
+        modelAndView.addObject("user", user);
+        modelAndView.setViewName("Home/User/profile");
 
-        modelandview.setViewName("Admin/User/index");
-        return modelandview;
+        //侧边栏显示
+        //获得热评文章
+        List<Article> mostCommentArticleList = articleService.listArticleByCommentCount(8);
+        modelAndView.addObject("mostCommentArticleList", mostCommentArticleList);
 
+        return modelAndView;
     }
 
     /**
-     * 后台添加用户页面显示
+     * 编辑个人信息页面显示
      *
+     * @param session
      * @return
      */
-    @RequestMapping(value = "/insert")
-    public ModelAndView insertUserView() {
+    @RequestMapping(value = "/home/profile/edit")
+    public ModelAndView editUserView(HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("Admin/User/insert");
+        User loginUser = (User) session.getAttribute("user");
+        User user = userService.getUserById(loginUser.getUserId());
+        modelAndView.addObject("user", user);
+
+        //侧边栏显示
+        //获得热评文章
+        List<Article> mostCommentArticleList = articleService.listArticleByCommentCount(8);
+        modelAndView.addObject("mostCommentArticleList", mostCommentArticleList);
+
+
+        modelAndView.setViewName("Home/User/editProfile");
         return modelAndView;
+    }
+
+
+    /**
+     * 编辑用户提交
+     *
+     * @param user
+     * @return
+     */
+    @RequestMapping(value = "/home/profile/save", method = RequestMethod.POST)
+    public String saveProfile(User user, HttpSession session) {
+        User dbUser = (User) session.getAttribute("user");
+
+        user.setUserId(dbUser.getUserId());
+        userService.updateUser(user);
+        return "redirect:/home/profile";
     }
 
     /**
@@ -110,26 +151,6 @@ public class BackUserController {
         return result;
     }
 
-
-    /**
-     * 后台添加用户页面提交
-     *
-     * @param user
-     * @return
-     */
-    @RequestMapping(value = "/insertSubmit", method = RequestMethod.POST)
-    public String insertUserSubmit(User user) {
-        User user2 = userService.getUserByName(user.getUserName());
-        User user3 = userService.getUserByEmail(user.getUserEmail());
-        if (user2 == null && user3 == null) {
-            user.setUserRegisterTime(new Date());
-            user.setUserStatus(1);
-            user.setUserRole(UserRole.USER.getValue());
-            userService.insertUser(user);
-        }
-        return "redirect:/home/user";
-    }
-
     /**
      * 删除用户
      *
@@ -155,7 +176,7 @@ public class BackUserController {
         User user = userService.getUserById(id);
         modelAndView.addObject("user", user);
 
-        modelAndView.setViewName("Admin/User/edit");
+        modelAndView.setViewName("Home/User/edit");
         return modelAndView;
     }
 

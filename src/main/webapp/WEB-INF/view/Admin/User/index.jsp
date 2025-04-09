@@ -56,7 +56,7 @@
         <tr>
             <td>
                  <img src="${u.userAvatar}" width="48" height="48">
-                 <strong><a href="/admin/user/edit/${u.userId}">${u.userName}</a></strong>
+                 <strong><a href="/home/user/edit/${u.userId}">${u.userName}</a></strong>
             </td>
             <td>
                 ${u.userNickname}
@@ -78,8 +78,8 @@
                 </c:choose>
             </td>
             <td>
-                <a href="/admin/user/edit/${u.userId}" class="layui-btn layui-btn-mini">编辑</a>
-                <a href="/admin/user/delete/${u.userId}" class="layui-btn layui-btn-danger layui-btn-mini" onclick="return confirmDelete()">删除</a>
+                <a href="/home/user/edit/${u.userId}" class="layui-btn layui-btn-mini">编辑</a>
+                <a href="/home/user/delete/${u.userId}" class="layui-btn layui-btn-danger layui-btn-mini" onclick="return confirmDelete()">删除</a>
             </td>
             <td>
                 ${u.userId}

@@ -46,17 +46,45 @@
                     </figure>
 
                     <header class="entry-header">
-                        <h2 class="entry-title">
-                            <a href="/article/${a.articleId}"
-                               rel="bookmark">
-                                    ${a.articleTitle}
-                            </a>
-                        </h2>
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                            <!-- 标题左对齐 -->
+                            <div style="flex: 1; text-align: left;">
+                                <h2 class="entry-title" style="margin: 0; font-weight: bold;">
+                                    <a href="/article/${a.articleId}" rel="bookmark">
+                                            ${a.articleTitle}
+                                    </a>
+                                </h2>
+                            </div>
+                        </div>
                     </header>
 
+
+
+                    </header>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: #666; white-space: nowrap; font-weight: bold;">
+                        <!-- 目的地居中 -->
+                        <div style="text-align: left; flex: 1;">
+                            目的地：${a.articleDestination}
+                        </div>
+
+                        <!-- 日期右对齐，不换行 -->
+                        <div style="text-align: right; flex: 1;">
+                            <fmt:formatDate value="${a.articleStartdate}" pattern="MM/yyyy" /> - <fmt:formatDate value="${a.articleEnddate}" pattern="MM/yyyy" />
+                        </div>
+                    </div>
+
+
+
                     <div class="entry-content">
-                        <div class="archive-content">
-                                ${a.articleSummary}...
+                        <div class="archive-content" class="archive-content" style="display: -webkit-box;
+                                                                                -webkit-line-clamp: 3;
+                                                                                -webkit-box-orient: vertical;
+                                                                                overflow: hidden;
+                                                                                text-overflow: ellipsis;
+                                                                                height: 4.5em;
+                                                                                line-height: 1.5em;">
+                                ${a.articleSummary}
                         </div>
                         <span class="title-l"></span>
                         <span class="new-icon">
@@ -121,24 +149,5 @@
     <%@include file="Public/part/sidebar-2.jsp" %>
 </rapid:override>
 <%--侧边栏 end--%>
-
-<%--友情链接 start--%>
-<rapid:override name="link">
-    <div class="links-box">
-        <div id="links">
-            <c:forEach items="${linkList}" var="l">
-                <ul class="lx7">
-                    <li class="link-f link-name">
-                        <a href="${l.linkUrl}" target="_blank">
-                                ${l.linkName}
-                        </a>
-                    </li>
-                </ul>
-            </c:forEach>
-            <div class="clear"></div>
-        </div>
-    </div>
-</rapid:override>
-<%--友情链接 end--%>
 
 <%@ include file="Public/framework.jsp" %>

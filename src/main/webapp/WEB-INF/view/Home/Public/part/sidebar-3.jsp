@@ -13,7 +13,7 @@
     <aside class="widget widget_search">
         <div class="searchbar">
             <form method="get" id="searchform1" action="/search">
-                    <span> <input type="text" value="" name="keywords" id="s1" placeholder="输入搜索内容" required="">
+                    <span> <input type="text" value="" name="keywords" id="s1" placeholder="输入标题或目的地搜索" value="${param.keywords}" required="">
                         <button type="submit" id="searchsubmit1">搜索</button>
                     </span>
             </form>

@@ -90,11 +90,11 @@
 
 
         <mvc:interceptor>
-            <mvc:mapping path="/admin/user"/>
+            <mvc:mapping path="/home/user"/>
             <bean class="com.travel.ssm.blog.interceptor.AdminInterceptor"/>
         </mvc:interceptor>
         <mvc:interceptor>
-            <mvc:mapping path="/admin/user/**"/>
+            <mvc:mapping path="/home/user/**"/>
             <bean class="com.travel.ssm.blog.interceptor.AdminInterceptor"/>
         </mvc:interceptor>
 
