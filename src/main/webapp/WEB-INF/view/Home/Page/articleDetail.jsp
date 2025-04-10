@@ -320,12 +320,8 @@
                                                     </span>
                                                     <fmt:formatDate value="${c.commentCreateTime}"
                                                                     pattern="yyyy年MM月dd日 HH:mm:ss"/>&nbsp;
-                                                    <c:if test="${sessionScope.user != null && sessionScope.user.userId == article.articleUserId}">
-                                                        <a href="javascript:void(0)"
-                                                           onclick="deleteComment(${c.commentId})">删除</a>
-                                                        <a class="comment-edit-link"
-                                                           href="/admin/comment/edit/${c.commentId}"
-                                                           target="_blank">编辑</a>
+                                                    <c:if test="${sessionScope.user.userId eq c.commentUserId || sessionScope.user.userId eq article.articleUserId}">
+                                                        <a href="javascript:void(0)" class="comment-delete-link" onclick="deleteComment(${c.commentId})">删除</a>
                                                     </c:if>
                                                     <span class="floor"> &nbsp;${c.commentFloor}楼 </span>
                                                 </span>
@@ -365,12 +361,8 @@
                                                         </span>
                                                         <fmt:formatDate value="${c2.commentCreateTime}"
                                                                         pattern="yyyy年MM月dd日 HH:mm:ss"/>&nbsp;
-                                                        <c:if test="${sessionScope.user != null}">
-                                                            <a href="javascript:void(0)"
-                                                               onclick="deleteComment(${c2.commentId})">删除</a>
-                                                            <a class="comment-edit-link"
-                                                               href="/admin/comment/edit/${c2.commentId}"
-                                                               target="_blank">编辑</a>
+                                                        <c:if test="${sessionScope.user.userId eq c2.commentUserId || sessionScope.user.userId eq article.articleUserId}">
+                                                            <a href="javascript:void(0)" class="comment-delete-link" onclick="deleteComment(${c2.commentId})">删除</a>
                                                         </c:if>
                                                         <span class="floor"> &nbsp;${c2.commentFloor}层 </span>
                                                     </span>
@@ -669,6 +661,14 @@
                              '<span class="" style="margin-top: 2px!important;color: #c40000;font-size: 13px;;"><b>博主</b></span>';
             }
             
+            // 判断当前用户是否可以删除此评论
+            var currentUserId = "${sessionScope.user.userId}";
+            var articleUserId = "${article.articleUserId}";
+            var deleteButton = '';
+            if (currentUserId == comment.commentUserId || currentUserId == articleUserId) {
+                deleteButton = '<a href="javascript:void(0)" class="comment-delete-link" onclick="deleteComment(' + comment.commentId + ')">删除</a>';
+            }
+            
             var commentHtml = '<li class="comments-anchor">' +
                 '<ul id="anchor-comment-' + comment.commentId + '"></ul>' +
                 '</li>' +
@@ -685,8 +685,7 @@
                 '<a rel="nofollow" class="comment-reply-link" href="javascript:void(0)" onclick="var commentBody=$(this).closest(\'.comment-body\');var commentId=commentBody.attr(\'id\').replace(\'div-comment-\',\'\');var commentAuthorName=commentBody.find(\'strong\').first().text().trim();$(\'#reply-title-word\').html(\'回复给 \'+commentAuthorName);$(\'#comment_pid\').val(commentId);$(\'input[name=commentPid]\').attr(\'value\',commentId);$(\'input[name=commentPname]\').attr(\'value\',commentAuthorName);$(\'#cancel-comment-reply-link\').show();$(\'html,body\').animate({scrollTop:$(\'#respond\').offset().top},500);return false;">回复</a>' +
                 '</span>' +
                 new Date(comment.commentCreateTime).toLocaleString() + '&nbsp;' +
-                '<a href="javascript:void(0)" onclick="deleteComment(' + comment.commentId + ')">删除</a>' +
-                '<a class="comment-edit-link" href="/admin/comment/edit/' + comment.commentId + '" target="_blank">编辑</a>' +
+                deleteButton +
                 '<span class="floor"> &nbsp;' + comment.commentFloor + '楼 </span>' +
                 '</span>' +
                 '</span>' +
@@ -715,6 +714,14 @@
                                  '<span class="" style="margin-top: 2px!important;color: #c40000;font-size: 13px;;"><b>博主</b></span>';
                 }
                 
+                // 判断当前用户是否可以删除此评论
+                var currentUserId = "${sessionScope.user.userId}";
+                var articleUserId = "${article.articleUserId}";
+                var deleteButton = '';
+                if (currentUserId == comment.commentUserId || currentUserId == articleUserId) {
+                    deleteButton = '<a href="javascript:void(0)" class="comment-delete-link" onclick="deleteComment(' + comment.commentId + ')">删除</a>';
+                }
+                
                 var commentHtml = '<li class="comments-anchor">' +
                     '<ul id="anchor-comment-' + comment.commentId + '"></ul>' +
                     '</li>' +
@@ -731,8 +738,7 @@
                     '<a rel="nofollow" class="comment-reply-link" href="javascript:void(0)" onclick="var commentBody=$(this).closest(\'.comment-body\');var commentId=commentBody.attr(\'id\').replace(\'div-comment-\',\'\');var commentAuthorName=commentBody.find(\'strong\').first().text().trim();$(\'#reply-title-word\').html(\'回复给 \'+commentAuthorName);$(\'#comment_pid\').val(commentId);$(\'input[name=commentPid]\').attr(\'value\',commentId);$(\'input[name=commentPname]\').attr(\'value\',commentAuthorName);$(\'#cancel-comment-reply-link\').show();$(\'html,body\').animate({scrollTop:$(\'#respond\').offset().top},500);return false;">回复</a>' +
                     '</span>' +
                     new Date(comment.commentCreateTime).toLocaleString() + '&nbsp;' +
-                    '<a href="javascript:void(0)" onclick="deleteComment(' + comment.commentId + ')">删除</a>' +
-                    '<a class="comment-edit-link" href="/admin/comment/edit/' + comment.commentId + '" target="_blank">编辑</a>' +
+                    deleteButton +
                     '<span class="floor"> &nbsp;' + comment.commentFloor + '层 </span>' +
                     '</span>' +
                     '</span>' +

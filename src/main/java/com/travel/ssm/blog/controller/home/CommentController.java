@@ -12,6 +12,7 @@ import com.travel.ssm.blog.service.CommentService;
 import com.travel.ssm.blog.util.MyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -193,5 +194,37 @@ public class CommentController {
         
         logger.info("找到 " + newComments.size() + " 条新评论");
         return newComments;
+    }
+
+    /**
+     * 删除评论
+     *
+     * @param id 评论ID
+     * @return 删除结果
+     */
+    @RequestMapping(value = "/admin/comment/delete/{id}", method = {RequestMethod.POST})
+    public JsonResult deleteComment(@PathVariable("id") Integer id, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return new JsonResult().fail("请先登录");
+        }
+
+        Comment comment = commentService.getCommentById(id);
+        if (comment == null) {
+            return new JsonResult().fail("评论不存在");
+        }
+
+        // 检查权限：只有评论作者或文章作者可以删除评论
+        if (!user.getUserId().equals(comment.getCommentUserId()) && !user.getUserId().equals(comment.getArticle().getArticleUserId())) {
+            return new JsonResult().fail("您没有权限删除此评论");
+        }
+
+        try {
+            commentService.deleteComment(id);
+            return new JsonResult().ok();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new JsonResult().fail("删除失败");
+        }
     }
 }
