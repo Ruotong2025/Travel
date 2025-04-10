@@ -372,7 +372,7 @@
                                                                href="/admin/comment/edit/${c2.commentId}"
                                                                target="_blank">编辑</a>
                                                         </c:if>
-                                                        <span class="floor"> &nbsp;${c.commentFloor}楼 </span>
+                                                        <span class="floor"> &nbsp;${c2.commentFloor}层 </span>
                                                     </span>
                                                 </span>
                                                     </span>
@@ -733,7 +733,7 @@
                     new Date(comment.commentCreateTime).toLocaleString() + '&nbsp;' +
                     '<a href="javascript:void(0)" onclick="deleteComment(' + comment.commentId + ')">删除</a>' +
                     '<a class="comment-edit-link" href="/admin/comment/edit/' + comment.commentId + '" target="_blank">编辑</a>' +
-                    '<span class="floor"> &nbsp;' + comment.commentFloor + '楼 </span>' +
+                    '<span class="floor"> &nbsp;' + comment.commentFloor + '层 </span>' +
                     '</span>' +
                     '</span>' +
                     '</span>' +

@@ -117,6 +117,7 @@ public class CommentController {
                 }
             }
             commentFloor = maxChildFloor + 1;
+            logger.info("计算回复评论层号: " + commentFloor);
         } else {
             // 如果是顶级评论，找出所有顶级评论，计算楼层
             int maxRootFloor = 0;
@@ -127,9 +128,9 @@ public class CommentController {
                 }
             }
             commentFloor = maxRootFloor + 1;
+            logger.info("计算主评论楼层号: " + commentFloor);
         }
         comment.setCommentFloor(commentFloor);
-        logger.info("计算评论楼层: " + commentFloor);
 
         //添加评论
         comment.setCommentUserId(user.getUserId());
@@ -180,17 +181,11 @@ public class CommentController {
         response.setHeader("Pragma", "no-cache");
         response.setDateHeader("Expires", 0);
         
-        // 获取文章的所有评论
-        List<Comment> commentList = commentService.listCommentByArticleId(articleId);
-        List<Comment> newComments = new ArrayList<>();
-
-        // 过滤出比lastCommentId新的评论
-        if (commentList != null && commentList.size() > 0) {
-            for (Comment comment : commentList) {
-                if (comment.getCommentId() > lastCommentId) {
-                    newComments.add(comment);
-                }
-            }
+        // 直接使用新的方法获取新评论
+        List<Comment> newComments = commentService.listNewCommentByArticleId(articleId, lastCommentId);
+        
+        if (newComments == null) {
+            newComments = new ArrayList<>();
         }
         
         // 按照评论ID倒序排列（最新的评论在前）
