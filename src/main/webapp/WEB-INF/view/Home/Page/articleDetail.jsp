@@ -295,10 +295,8 @@
                 </div>
 
                 <ol class="comment-list">
-                    <c:set var="floor" value="0"/>
                     <c:forEach items="${commentList}" var="c">
                         <c:if test="${c.commentPid == 0}">
-                            <c:set var="floor" value="${floor + 1}"/>
                             <li class="comments-anchor">
                                 <ul id="anchor-comment-${c.commentId}"></ul>
                             </li>
@@ -329,7 +327,7 @@
                                                            href="/admin/comment/edit/${c.commentId}"
                                                            target="_blank">编辑</a>
                                                     </c:if>
-                                                    <span class="floor"> &nbsp;${floor}楼 </span>
+                                                    <span class="floor"> &nbsp;${c.commentFloor}楼 </span>
                                                 </span>
                                             </span>
                                         </span>
@@ -342,10 +340,8 @@
                                     </div>
                                 </div>
                                 <ul class="children">
-                                    <c:set var="floor2" value="0"/>
                                     <c:forEach items="${commentList}" var="c2">
                                         <c:if test="${c.commentId == c2.commentPid}">
-                                            <c:set var="floor2" value="${floor2+1}"/>
                                             <li class="comments-anchor">
                                                 <ul id="anchor-comment-${c2.commentId}"></ul>
                                             </li>
@@ -376,7 +372,7 @@
                                                                href="/admin/comment/edit/${c2.commentId}"
                                                                target="_blank">编辑</a>
                                                         </c:if>
-                                                        <span class="floor"> &nbsp;${floor2}层 </span>
+                                                        <span class="floor"> &nbsp;${c.commentFloor}楼 </span>
                                                     </span>
                                                 </span>
                                                     </span>
@@ -667,8 +663,6 @@
 
         // 添加顶级评论
         function addTopLevelComment(comment) {
-            var floor = $(".comment").length + 1;
-            
             var authorHTML = '';
             if (comment.commentRole == 1) {
                 authorHTML = '<i class="fa fa-black-tie" style="color: #c40000;"></i>' +
@@ -693,7 +687,7 @@
                 new Date(comment.commentCreateTime).toLocaleString() + '&nbsp;' +
                 '<a href="javascript:void(0)" onclick="deleteComment(' + comment.commentId + ')">删除</a>' +
                 '<a class="comment-edit-link" href="/admin/comment/edit/' + comment.commentId + '" target="_blank">编辑</a>' +
-                '<span class="floor"> &nbsp;' + floor + '楼 </span>' +
+                '<span class="floor"> &nbsp;' + comment.commentFloor + '楼 </span>' +
                 '</span>' +
                 '</span>' +
                 '</span>' +
@@ -715,8 +709,6 @@
             // 找到父评论
             var parentComment = $("#div-comment-" + comment.commentPid).closest('li.comment');
             if (parentComment.length > 0) {
-                var floor = parentComment.find('.children .comment').length + 1;
-                
                 var authorHTML = '';
                 if (comment.commentRole == 1) {
                     authorHTML = '<i class="fa fa-black-tie" style="color: #c40000;"></i>' +
@@ -741,7 +733,7 @@
                     new Date(comment.commentCreateTime).toLocaleString() + '&nbsp;' +
                     '<a href="javascript:void(0)" onclick="deleteComment(' + comment.commentId + ')">删除</a>' +
                     '<a class="comment-edit-link" href="/admin/comment/edit/' + comment.commentId + '" target="_blank">编辑</a>' +
-                    '<span class="floor"> &nbsp;' + floor + '层 </span>' +
+                    '<span class="floor"> &nbsp;' + comment.commentFloor + '楼 </span>' +
                     '</span>' +
                     '</span>' +
                     '</span>' +

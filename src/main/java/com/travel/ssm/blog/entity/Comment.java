@@ -39,6 +39,11 @@ public class Comment implements Serializable {
     private Date commentCreateTime;
 
     /**
+     * 评论楼层数
+     */
+    private Integer commentFloor;
+
+    /**
      * 角色(管理员1，访客0)
      */
     private Integer commentRole;

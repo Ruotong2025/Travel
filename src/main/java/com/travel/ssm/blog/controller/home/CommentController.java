@@ -102,6 +102,35 @@ public class CommentController {
             logger.info("评论内容超长，已截断至255字符");
         }
 
+        // 计算评论楼层
+        Integer commentFloor = 1;
+        List<Comment> existingComments = commentService.listCommentByArticleId(comment.getCommentArticleId());
+
+        if (comment.getCommentPid() != null && comment.getCommentPid() > 0) {
+            // 如果是回复评论，找出同一父评论下的所有回复，计算楼层
+            int maxChildFloor = 0;
+            for (Comment existingComment : existingComments) {
+                if (existingComment.getCommentPid() != null && 
+                    existingComment.getCommentPid().equals(comment.getCommentPid()) && 
+                    existingComment.getCommentFloor() != null) {
+                    maxChildFloor = Math.max(maxChildFloor, existingComment.getCommentFloor());
+                }
+            }
+            commentFloor = maxChildFloor + 1;
+        } else {
+            // 如果是顶级评论，找出所有顶级评论，计算楼层
+            int maxRootFloor = 0;
+            for (Comment existingComment : existingComments) {
+                if ((existingComment.getCommentPid() == null || existingComment.getCommentPid() == 0) && 
+                    existingComment.getCommentFloor() != null) {
+                    maxRootFloor = Math.max(maxRootFloor, existingComment.getCommentFloor());
+                }
+            }
+            commentFloor = maxRootFloor + 1;
+        }
+        comment.setCommentFloor(commentFloor);
+        logger.info("计算评论楼层: " + commentFloor);
+
         //添加评论
         comment.setCommentUserId(user.getUserId());
         comment.setCommentCreateTime(new Date());
