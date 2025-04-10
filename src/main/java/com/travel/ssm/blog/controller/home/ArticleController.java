@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -68,6 +69,7 @@ public class ArticleController {
 
         //评论列表
         List<Comment> commentList = commentService.listCommentByArticleId(articleId);
+        Collections.sort(commentList, (c1, c2) -> c2.getCommentId().compareTo(c1.getCommentId()));
         model.addAttribute("commentList", commentList);
 
         //相关文章

@@ -101,5 +101,13 @@ public interface CommentService {
      */
     List<Comment> listChildComment(Integer id);
 
+    /**
+     * 获取文章的新评论（评论ID大于最后评论ID）
+     *
+     * @param articleId 文章ID
+     * @param lastCommentId 最后评论ID
+     * @return 评论列表
+     */
+    List<Comment> listNewCommentByArticleId(Integer articleId, Integer lastCommentId);
 
 }

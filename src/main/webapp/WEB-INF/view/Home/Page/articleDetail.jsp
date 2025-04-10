@@ -422,8 +422,6 @@
     <script src="/js/jquery.cookie.js"></script>
 
     <script type="text/javascript">
-
-
         var articleId = $("#articleDetail").attr("data-id");
         increaseViewCount(articleId);
         layui.code({
@@ -432,6 +430,313 @@
             about: false
         });
 
+        // 全局变量，跟踪最大评论ID
+        var lastCommentId = 0;
+        var commentPolling = false;
+        var pollingInterval = null;
+
+        // 页面加载后初始化评论监听
+        $(document).ready(function() {
+            console.log("页面加载完成，初始化评论系统");
+            
+            // 找出当前页面最大的评论ID
+            $('.comment').each(function() {
+                var commentId = parseInt($(this).find('.comment-body').attr('id').replace('div-comment-', ''));
+                if (!isNaN(commentId) && commentId > lastCommentId) {
+                    lastCommentId = commentId;
+                }
+            });
+            
+            console.log("初始化最大评论ID: " + lastCommentId);
+            
+            // 启动轮询检查新评论
+            startCommentPolling();
+            
+            // 绑定评论表单提交事件
+            $("#comment_form").submit(function(e) {
+                e.preventDefault();
+                
+                // 验证表单内容
+                var commentContent = $("#comment").val();
+                if (!commentContent || commentContent.trim() === "") {
+                    layer.msg("评论内容不能为空！");
+                    return false;
+                }
+                
+                // 禁用提交按钮防止重复提交
+                $("#submit").prop("disabled", true);
+                
+                // 提交评论
+                $.ajax({
+                    type: "POST",
+                    url: '/comment',
+                    contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                    data: $(this).serialize(),
+                    success: function(data) {
+                        if (data.code == 0) {
+                            layer.msg("评论成功！");
+                            // 清空评论框
+                            $("#comment").val("");
+                            // 取消回复状态
+                            $("#cancel-comment-reply-link").hide();
+                            $("input[name=commentPid]").attr("value", 0);
+                            $("input[name=commentPname]").attr("value", "");
+                            $("#reply-title-word").html("发表评论");
+                            
+                            // 手动触发一次评论刷新
+                            setTimeout(fetchNewComments, 500);
+                        } else {
+                            layer.msg(data.msg || "评论提交失败！");
+                        }
+                        // 重新启用提交按钮
+                        $("#submit").prop("disabled", false);
+                    },
+                    error: function() {
+                        layer.msg("评论提交失败，请稍后再试！");
+                        $("#submit").prop("disabled", false);
+                    }
+                });
+                
+                return false;
+            });
+            
+            // 确保页面关闭时清除轮询
+            $(window).on('beforeunload', function() {
+                stopCommentPolling();
+            });
+        });
+
+        // 开始轮询检查新评论
+        function startCommentPolling() {
+            if (!commentPolling) {
+                commentPolling = true;
+                
+                // 先立即执行一次
+                fetchNewComments();
+                
+                // 然后每3秒检查一次新评论 (缩短时间提高实时性)
+                pollingInterval = setInterval(fetchNewComments, 3000);
+                console.log("开始评论轮询");
+            }
+        }
+        
+        // 停止轮询
+        function stopCommentPolling() {
+            if (commentPolling && pollingInterval) {
+                clearInterval(pollingInterval);
+                commentPolling = false;
+                console.log("停止评论轮询");
+            }
+        }
+
+        // 获取新评论
+        function fetchNewComments() {
+            // 确保获取到articleId
+            var currentArticleId = $("#articleDetail").attr("data-id");
+            if (!currentArticleId) {
+                console.error("无法获取文章ID");
+                return;
+            }
+            
+            console.log("正在获取新评论，文章ID: " + currentArticleId + ", 最后评论ID: " + lastCommentId);
+            
+            // 发起AJAX请求获取新评论
+            $.ajax({
+                type: "GET",
+                url: '/comment/new',
+                data: {
+                    articleId: currentArticleId,
+                    lastCommentId: lastCommentId,
+                    _: new Date().getTime() // 添加时间戳防止缓存
+                },
+                dataType: 'json',
+                cache: false, // 禁用缓存
+                timeout: 5000, // 设置超时
+                success: function(data) {
+                    if (data && data.length > 0) {
+                        console.log("收到" + data.length + "条新评论", data);
+                        updateComments(data);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("获取评论出错: " + error);
+                    // 出错时不停止轮询，让它继续尝试
+                }
+            });
+        }
+
+        // 更新评论区域
+        function updateComments(newComments) {
+            for (var i = 0; i < newComments.length; i++) {
+                var comment = newComments[i];
+                
+                // 检查评论是否已存在
+                if ($("#div-comment-" + comment.commentId).length > 0) {
+                    console.log("评论已存在，跳过: " + comment.commentId);
+                    continue;
+                }
+                
+                console.log("添加新评论: " + comment.commentId);
+                
+                // 更新最大评论ID
+                if (comment.commentId > lastCommentId) {
+                    lastCommentId = comment.commentId;
+                }
+                
+                // 根据评论类型（顶级评论或回复）添加到正确位置
+                if (comment.commentPid == 0) {
+                    addTopLevelComment(comment);
+                } else {
+                    addReplyComment(comment);
+                }
+            }
+            
+            // 更新评论计数
+            $(".comment-count").text($(".comment").length);
+        }
+
+        // 添加顶级评论
+        function addTopLevelComment(comment) {
+            var floor = $(".comment").length + 1;
+            
+            var authorHTML = '';
+            if (comment.commentRole == 1) {
+                authorHTML = '<i class="fa fa-black-tie" style="color: #c40000;"></i>' +
+                             '<span class="" style="margin-top: 2px!important;color: #c40000;font-size: 13px;;"><b>博主</b></span>';
+            }
+            
+            var commentHtml = 
+                '<li class="comments-anchor">' +
+                '<ul id="anchor-comment-' + comment.commentId + '"></ul>' +
+                '</li>' +
+                '<li class="comment">' +
+                '<div id="div-comment-' + comment.commentId + '" class="comment-body">' +
+                '<div class="comment-author vcard">' +
+                '<img class="avatar" src="' + comment.commentAuthorAvatar + '" alt="avatar" style="display: block;">' +
+                '<strong>' + comment.commentAuthorName + ' </strong>' + authorHTML +
+                '<span class="comment-meta commentmetadata">' +
+                '<span class="ua-info" style="display: inline;">' +
+                '<br>' +
+                '<span class="comment-aux">' +
+                '<span class="reply">' +
+                '<a rel="nofollow" class="comment-reply-link" href="#respond" onclick="replyComment()">回复</a>' +
+                '</span>' +
+                new Date(comment.commentCreateTime).toLocaleString() + '&nbsp;' +
+                '<a href="javascript:void(0)" onclick="deleteComment(' + comment.commentId + ')">删除</a>' +
+                '<a class="comment-edit-link" href="/admin/comment/edit/' + comment.commentId + '" target="_blank">编辑</a>' +
+                '<span class="floor"> &nbsp;' + floor + '楼 </span>' +
+                '</span>' +
+                '</span>' +
+                '</span>' +
+                '<p>' + comment.commentContent + '</p>' +
+                '</div>' +
+                '</div>' +
+                '<ul class="children"></ul>' +
+                '</li>';
+            
+            // 添加到评论列表的顶部（新评论在前）
+            $(".comment-list").prepend(commentHtml);
+            
+            // 应用高亮效果
+            $("#div-comment-" + comment.commentId).closest('li.comment').hide().fadeIn(1000);
+        }
+
+        // 添加回复评论
+        function addReplyComment(comment) {
+            // 找到父评论
+            var parentComment = $("#div-comment-" + comment.commentPid).closest('li.comment');
+            if (parentComment.length > 0) {
+                var floor = parentComment.find('.children .comment').length + 1;
+                
+                var authorHTML = '';
+                if (comment.commentRole == 1) {
+                    authorHTML = '<i class="fa fa-black-tie" style="color: #c40000;"></i>' +
+                                 '<span class="" style="margin-top: 2px!important;color: #c40000;font-size: 13px;;"><b>博主</b></span>';
+                }
+                
+                var commentHtml = 
+                    '<li class="comments-anchor">' +
+                    '<ul id="anchor-comment-' + comment.commentId + '"></ul>' +
+                    '</li>' +
+                    '<li class="comment">' +
+                    '<div id="div-comment-' + comment.commentId + '" class="comment-body">' +
+                    '<div class="comment-author vcard">' +
+                    '<img class="avatar" src="' + comment.commentAuthorAvatar + '" alt="avatar" style="display: block;">' +
+                    '<strong>' + comment.commentAuthorName + ' </strong>' + authorHTML +
+                    '<span class="comment-meta">' +
+                    '<span class="ua-info" style="display: inline;">' +
+                    '<br>' +
+                    '<span class="comment-aux">' +
+                    '<span class="reply">' +
+                    '<a rel="nofollow" class="comment-reply-link" href="#respond" onclick="replyComment()">回复</a>' +
+                    '</span>' +
+                    new Date(comment.commentCreateTime).toLocaleString() + '&nbsp;' +
+                    '<a href="javascript:void(0)" onclick="deleteComment(' + comment.commentId + ')">删除</a>' +
+                    '<a class="comment-edit-link" href="/admin/comment/edit/' + comment.commentId + '" target="_blank">编辑</a>' +
+                    '<span class="floor"> &nbsp;' + floor + '层 </span>' +
+                    '</span>' +
+                    '</span>' +
+                    '</span>' +
+                    '<p>' +
+                    '<span class="at">@ ' + comment.commentPname + '</span>' +
+                    comment.commentContent +
+                    '</p>' +
+                    '</div>' +
+                    '</div>' +
+                    '</li>';
+                
+                // 添加到父评论的子评论列表中
+                parentComment.find('.children').prepend(commentHtml);
+                
+                // 应用高亮效果
+                $("#div-comment-" + comment.commentId).closest('li.comment').hide().fadeIn(1000);
+            } else {
+                console.error("找不到父评论: " + comment.commentPid);
+            }
+        }
+
+        // 回复评论函数
+        function replyComment() {
+            var commentId = $(this).closest('.comment-body').attr('id').replace('div-comment-', '');
+            var commentAuthorName = $(this).closest('.comment-body').find('strong').first().text().trim();
+            
+            $("#reply-title-word").html("回复给 " + commentAuthorName);
+            $("#comment_pid").val(commentId);
+            $("input[name=commentPname]").attr("value", commentAuthorName);
+            $("#cancel-comment-reply-link").show();
+            
+            // 滚动到评论表单
+            $('html, body').animate({
+                scrollTop: $('#respond').offset().top
+            }, 500);
+        }
+
+        // 删除评论函数
+        function deleteComment(id) {
+            if (confirm("确认要删除这条评论吗？")) {
+                $.ajax({
+                    async: false,
+                    type: "POST",
+                    url: '/admin/comment/delete/' + id,
+                    contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                    dataType: "text",
+                    success: function() {
+                        // 移除评论
+                        $("#div-comment-" + id).closest('li.comment').prev('.comments-anchor').remove();
+                        $("#div-comment-" + id).closest('li.comment').fadeOut(300, function() {
+                            $(this).remove();
+                            // 更新评论计数
+                            $(".comment-count").text($(".comment").length);
+                        });
+                        
+                        layer.msg("评论已删除");
+                    },
+                    error: function() {
+                        layer.msg("删除评论失败，请稍后再试");
+                    }
+                });
+            }
+        }
     </script>
 
 </rapid:override>

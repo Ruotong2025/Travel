@@ -95,7 +95,18 @@
         <include refid="tb"/>
         WHERE
         comment_article_id = #{id}
-        ORDER BY comment_id ASC
+        ORDER BY comment_id DESC
+    </select>
+
+    <select id="listNewCommentByArticleId" resultType="com.travel.ssm.blog.entity.Comment">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        <include refid="tb"/>
+        WHERE
+        comment_article_id = #{articleId}
+        AND comment_id > #{lastCommentId}
+        ORDER BY comment_id DESC
     </select>
 
 

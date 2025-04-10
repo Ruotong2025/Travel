@@ -162,4 +162,16 @@ public class CommentServiceImpl implements CommentService {
         return childCommentList;
     }
 
+    @Override
+    public List<Comment> listNewCommentByArticleId(Integer articleId, Integer lastCommentId) {
+        List<Comment> newCommentList = null;
+        try {
+            newCommentList = commentMapper.listNewCommentByArticleId(articleId, lastCommentId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("获取新评论失败, articleId:{}, lastCommentId:{}, cause:{}", articleId, lastCommentId, e);
+        }
+        return newCommentList;
+    }
+
 }
