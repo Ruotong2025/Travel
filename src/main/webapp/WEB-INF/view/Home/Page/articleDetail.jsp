@@ -268,7 +268,7 @@
                         </c:if>
                     </h3>
 
-                    <form id="comment_form" method="post">
+                    <form id="comment_form" onsubmit="return false;">
                         <c:if test="${sessionScope.user!=null}">
                             <div class="user_avatar">
                                 <img src="${sessionScope.user.userAvatar}"
@@ -286,7 +286,7 @@
                         </div>
                         <div class="clear"></div>
                         <p class="form-submit">
-                            <input id="submit" name="submit" type="submit" tabindex="5" value="提交评论">
+                            <input id="submit" name="submit" type="button" tabindex="5" value="提交评论" onclick="javascript:$('#submit').prop('disabled',true);$.ajax({type:'POST',url:'/comment',contentType:'application/x-www-form-urlencoded; charset=utf-8',data:$('#comment_form').serialize(),success:function(data){if(data.code==0){layer.msg('评论成功！');$('#comment').val('');$('#cancel-comment-reply-link').hide();$('input[name=commentPid]').attr('value',0);$('input[name=commentPname]').attr('value','');$('#reply-title-word').html('发表评论');}else{layer.msg(data.msg||'评论提交失败！');}$('#submit').prop('disabled',false);},error:function(){layer.msg('评论提交失败，请稍后再试！');$('#submit').prop('disabled',false);}});">
                             <input type="hidden" name="commentArticleId"
                                    value="${article.articleId}" id="article_id">
                             <input type="hidden" name="commentPid" id="comment_pid" value="0">
@@ -318,9 +318,7 @@
                                                 <br>
                                                 <span class="comment-aux">
                                                     <span class="reply">
-                                                        <a rel="nofollow" class="comment-reply-link" href="#respond"
-                                                           onclick="replyComment()">回复
-                                                        </a>
+                                                        <a rel="nofollow" class="comment-reply-link" href="javascript:void(0)" onclick="var commentBody=$(this).closest('.comment-body');var commentId=commentBody.attr('id').replace('div-comment-','');var commentAuthorName=commentBody.find('strong').first().text().trim();$('#reply-title-word').html('回复给 '+commentAuthorName);$('#comment_pid').val(commentId);$('input[name=commentPid]').attr('value',commentId);$('input[name=commentPname]').attr('value',commentAuthorName);$('#cancel-comment-reply-link').show();$('html,body').animate({scrollTop:$('#respond').offset().top},500);return false;">回复</a>
                                                     </span>
                                                     <fmt:formatDate value="${c.commentCreateTime}"
                                                                     pattern="yyyy年MM月dd日 HH:mm:ss"/>&nbsp;
@@ -352,7 +350,7 @@
                                                 <ul id="anchor-comment-${c2.commentId}"></ul>
                                             </li>
                                             <li class="comment">
-                                                <div id="div-comment-${c.commentId}" class="comment-body">
+                                                <div id="div-comment-${c2.commentId}" class="comment-body">
                                                     <div class="comment-author vcard">
                                                         <img class="avatar" src="${c2.commentAuthorAvatar}" alt="avatar"
                                                              style="display: block;">
@@ -367,9 +365,7 @@
                                                     <br>
                                                     <span class="comment-aux">
                                                         <span class="reply">
-                                                            <a rel="nofollow" class="comment-reply-link" href="#respond"
-                                                               onclick="replyComment()">回复
-                                                            </a>
+                                                            <a rel="nofollow" class="comment-reply-link" href="javascript:void(0)" onclick="var commentBody=$(this).closest('.comment-body');var commentId=commentBody.attr('id').replace('div-comment-','');var commentAuthorName=commentBody.find('strong').first().text().trim();$('#reply-title-word').html('回复给 '+commentAuthorName);$('#comment_pid').val(commentId);$('input[name=commentPid]').attr('value',commentId);$('input[name=commentPname]').attr('value',commentAuthorName);$('#cancel-comment-reply-link').show();$('html,body').animate({scrollTop:$('#respond').offset().top},500);return false;">回复</a>
                                                         </span>
                                                         <fmt:formatDate value="${c2.commentCreateTime}"
                                                                         pattern="yyyy年MM月dd日 HH:mm:ss"/>&nbsp;
@@ -386,11 +382,9 @@
                                                     </span>
                                                         <p>
                                                             <c:if test="${c2.commentPid!=0}">
-                                                                <c:if test="${c2.commentPid!=0}">
-                                                                    <span class="at">@ ${c2.commentPname}</span>
-                                                                </c:if>
-                                                                ${c2.commentContent}
+                                                                <span class="at">@ ${c2.commentPname}</span>
                                                             </c:if>
+                                                                ${c2.commentContent}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -422,6 +416,12 @@
     <script src="/js/jquery.cookie.js"></script>
 
     <script type="text/javascript">
+        // 声明所有关键函数为全局函数
+        window.submitComment = submitComment;
+        window.replyComment = replyComment;
+        window.deleteComment = deleteComment;
+        window.isSubmitting = false;
+        
         var articleId = $("#articleDetail").attr("data-id");
         increaseViewCount(articleId);
         layui.code({
@@ -439,11 +439,25 @@
         $(document).ready(function() {
             console.log("页面加载完成，初始化评论系统");
             
+            // 绑定取消回复链接
+            $("#cancel-comment-reply-link").click(function(e) {
+                e.preventDefault();
+                $(this).hide();
+                $("#reply-title-word").html("发表评论");
+                $("input[name=commentPid]").attr("value", 0);
+                $("input[name=commentPname]").attr("value", "");
+                return false;
+            });
+            
             // 找出当前页面最大的评论ID
             $('.comment').each(function() {
-                var commentId = parseInt($(this).find('.comment-body').attr('id').replace('div-comment-', ''));
-                if (!isNaN(commentId) && commentId > lastCommentId) {
-                    lastCommentId = commentId;
+                var commentBody = $(this).find('.comment-body');
+                var commentBodyId = commentBody.attr('id');
+                if (commentBodyId) {
+                    var commentId = parseInt(commentBodyId.replace('div-comment-', ''));
+                    if (!isNaN(commentId) && commentId > lastCommentId) {
+                        lastCommentId = commentId;
+                    }
                 }
             });
             
@@ -452,59 +466,115 @@
             // 启动轮询检查新评论
             startCommentPolling();
             
-            // 绑定评论表单提交事件
-            $("#comment_form").submit(function(e) {
-                e.preventDefault();
-                
-                // 验证表单内容
-                var commentContent = $("#comment").val();
-                if (!commentContent || commentContent.trim() === "") {
-                    layer.msg("评论内容不能为空！");
-                    return false;
-                }
-                
-                // 禁用提交按钮防止重复提交
-                $("#submit").prop("disabled", true);
-                
-                // 提交评论
-                $.ajax({
-                    type: "POST",
-                    url: '/comment',
-                    contentType: "application/x-www-form-urlencoded; charset=utf-8",
-                    data: $(this).serialize(),
-                    success: function(data) {
-                        if (data.code == 0) {
-                            layer.msg("评论成功！");
-                            // 清空评论框
-                            $("#comment").val("");
-                            // 取消回复状态
-                            $("#cancel-comment-reply-link").hide();
-                            $("input[name=commentPid]").attr("value", 0);
-                            $("input[name=commentPname]").attr("value", "");
-                            $("#reply-title-word").html("发表评论");
-                            
-                            // 手动触发一次评论刷新
-                            setTimeout(fetchNewComments, 500);
-                        } else {
-                            layer.msg(data.msg || "评论提交失败！");
-                        }
-                        // 重新启用提交按钮
-                        $("#submit").prop("disabled", false);
-                    },
-                    error: function() {
-                        layer.msg("评论提交失败，请稍后再试！");
-                        $("#submit").prop("disabled", false);
-                    }
-                });
-                
-                return false;
-            });
-            
             // 确保页面关闭时清除轮询
             $(window).on('beforeunload', function() {
                 stopCommentPolling();
             });
         });
+        
+        // 提交评论函数
+        function submitComment() {
+            console.log("提交评论函数被调用");
+            if (window.isSubmitting) {
+                return;
+            }
+
+            // 验证表单内容
+            var commentContent = $("#comment").val();
+            if (!commentContent || commentContent.trim() === "") {
+                layer.msg("评论内容不能为空！");
+                return;
+            }
+            
+            // 设置提交状态
+            window.isSubmitting = true;
+            $("#submit").prop("disabled", true);
+            
+            // 提交评论
+            $.ajax({
+                type: "POST",
+                url: '/comment',
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                data: $("#comment_form").serialize(),
+                success: function(data) {
+                    if (data.code == 0) {
+                        layer.msg("评论成功！");
+                        // 清空评论框
+                        $("#comment").val("");
+                        // 取消回复状态
+                        $("#cancel-comment-reply-link").hide();
+                        $("input[name=commentPid]").attr("value", 0);
+                        $("input[name=commentPname]").attr("value", "");
+                        $("#reply-title-word").html("发表评论");
+                        
+                        // 手动触发一次评论刷新
+                        setTimeout(fetchNewComments, 500);
+                    } else {
+                        layer.msg(data.msg || "评论提交失败！");
+                    }
+                },
+                error: function() {
+                    layer.msg("评论提交失败，请稍后再试！");
+                },
+                complete: function() {
+                    // 重置提交状态
+                    window.isSubmitting = false;
+                    $("#submit").prop("disabled", false);
+                }
+            });
+        }
+
+        // 回复评论函数
+        function replyComment(element) {
+            // 防止重复提交
+            if (window.isSubmitting) {
+                return false; 
+            }
+            
+            var commentBody = $(element).closest('.comment-body');
+            var commentId = commentBody.attr('id').replace('div-comment-', '');
+            var commentAuthorName = commentBody.find('strong').first().text().trim();
+            
+            // 设置回复状态
+            $("#reply-title-word").html("回复给 " + commentAuthorName);
+            $("#comment_pid").val(commentId);
+            $("input[name=commentPname]").attr("value", commentAuthorName);
+            $("#cancel-comment-reply-link").show();
+            
+            // 滚动到评论表单
+            $('html, body').animate({
+                scrollTop: $('#respond').offset().top
+            }, 500);
+            
+            return false; // 阻止默认行为和冒泡
+        }
+
+        // 删除评论函数
+        function deleteComment(id) {
+            if (confirm("确认要删除这条评论吗？")) {
+                $.ajax({
+                    async: false,
+                    type: "POST",
+                    url: '/admin/comment/delete/' + id,
+                    contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                    dataType: "text",
+                    success: function() {
+                        // 移除评论
+                        $("#div-comment-" + id).closest('li.comment').prev('.comments-anchor').remove();
+                        $("#div-comment-" + id).closest('li.comment').fadeOut(300, function() {
+                            $(this).remove();
+                            // 更新评论计数
+                            $(".comment-count").text($(".comment").length);
+                        });
+                        
+                        layer.msg("评论已删除");
+                    },
+                    error: function() {
+                        layer.msg("删除评论失败，请稍后再试");
+                    }
+                });
+            }
+        }
 
         // 开始轮询检查新评论
         function startCommentPolling() {
@@ -605,8 +675,7 @@
                              '<span class="" style="margin-top: 2px!important;color: #c40000;font-size: 13px;;"><b>博主</b></span>';
             }
             
-            var commentHtml = 
-                '<li class="comments-anchor">' +
+            var commentHtml = '<li class="comments-anchor">' +
                 '<ul id="anchor-comment-' + comment.commentId + '"></ul>' +
                 '</li>' +
                 '<li class="comment">' +
@@ -619,7 +688,7 @@
                 '<br>' +
                 '<span class="comment-aux">' +
                 '<span class="reply">' +
-                '<a rel="nofollow" class="comment-reply-link" href="#respond" onclick="replyComment()">回复</a>' +
+                '<a rel="nofollow" class="comment-reply-link" href="javascript:void(0)" onclick="var commentBody=$(this).closest(\'.comment-body\');var commentId=commentBody.attr(\'id\').replace(\'div-comment-\',\'\');var commentAuthorName=commentBody.find(\'strong\').first().text().trim();$(\'#reply-title-word\').html(\'回复给 \'+commentAuthorName);$(\'#comment_pid\').val(commentId);$(\'input[name=commentPid]\').attr(\'value\',commentId);$(\'input[name=commentPname]\').attr(\'value\',commentAuthorName);$(\'#cancel-comment-reply-link\').show();$(\'html,body\').animate({scrollTop:$(\'#respond\').offset().top},500);return false;">回复</a>' +
                 '</span>' +
                 new Date(comment.commentCreateTime).toLocaleString() + '&nbsp;' +
                 '<a href="javascript:void(0)" onclick="deleteComment(' + comment.commentId + ')">删除</a>' +
@@ -654,8 +723,7 @@
                                  '<span class="" style="margin-top: 2px!important;color: #c40000;font-size: 13px;;"><b>博主</b></span>';
                 }
                 
-                var commentHtml = 
-                    '<li class="comments-anchor">' +
+                var commentHtml = '<li class="comments-anchor">' +
                     '<ul id="anchor-comment-' + comment.commentId + '"></ul>' +
                     '</li>' +
                     '<li class="comment">' +
@@ -668,7 +736,7 @@
                     '<br>' +
                     '<span class="comment-aux">' +
                     '<span class="reply">' +
-                    '<a rel="nofollow" class="comment-reply-link" href="#respond" onclick="replyComment()">回复</a>' +
+                    '<a rel="nofollow" class="comment-reply-link" href="javascript:void(0)" onclick="var commentBody=$(this).closest(\'.comment-body\');var commentId=commentBody.attr(\'id\').replace(\'div-comment-\',\'\');var commentAuthorName=commentBody.find(\'strong\').first().text().trim();$(\'#reply-title-word\').html(\'回复给 \'+commentAuthorName);$(\'#comment_pid\').val(commentId);$(\'input[name=commentPid]\').attr(\'value\',commentId);$(\'input[name=commentPname]\').attr(\'value\',commentAuthorName);$(\'#cancel-comment-reply-link\').show();$(\'html,body\').animate({scrollTop:$(\'#respond\').offset().top},500);return false;">回复</a>' +
                     '</span>' +
                     new Date(comment.commentCreateTime).toLocaleString() + '&nbsp;' +
                     '<a href="javascript:void(0)" onclick="deleteComment(' + comment.commentId + ')">删除</a>' +
@@ -692,49 +760,6 @@
                 $("#div-comment-" + comment.commentId).closest('li.comment').hide().fadeIn(1000);
             } else {
                 console.error("找不到父评论: " + comment.commentPid);
-            }
-        }
-
-        // 回复评论函数
-        function replyComment() {
-            var commentId = $(this).closest('.comment-body').attr('id').replace('div-comment-', '');
-            var commentAuthorName = $(this).closest('.comment-body').find('strong').first().text().trim();
-            
-            $("#reply-title-word").html("回复给 " + commentAuthorName);
-            $("#comment_pid").val(commentId);
-            $("input[name=commentPname]").attr("value", commentAuthorName);
-            $("#cancel-comment-reply-link").show();
-            
-            // 滚动到评论表单
-            $('html, body').animate({
-                scrollTop: $('#respond').offset().top
-            }, 500);
-        }
-
-        // 删除评论函数
-        function deleteComment(id) {
-            if (confirm("确认要删除这条评论吗？")) {
-                $.ajax({
-                    async: false,
-                    type: "POST",
-                    url: '/admin/comment/delete/' + id,
-                    contentType: "application/x-www-form-urlencoded; charset=utf-8",
-                    dataType: "text",
-                    success: function() {
-                        // 移除评论
-                        $("#div-comment-" + id).closest('li.comment').prev('.comments-anchor').remove();
-                        $("#div-comment-" + id).closest('li.comment').fadeOut(300, function() {
-                            $(this).remove();
-                            // 更新评论计数
-                            $(".comment-count").text($(".comment").length);
-                        });
-                        
-                        layer.msg("评论已删除");
-                    },
-                    error: function() {
-                        layer.msg("删除评论失败，请稍后再试");
-                    }
-                });
             }
         }
     </script>
