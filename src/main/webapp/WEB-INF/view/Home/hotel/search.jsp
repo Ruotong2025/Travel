@@ -3,7 +3,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hotel Search</title>
+    <div class="d-flex justify-content-between align-items-center my-4">
+        <a href="/article" class="btn btn-outline-primary">
+            <i class="fa fa-home"></i> Return to Home
+        </a>
+    </div>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
     <style>
