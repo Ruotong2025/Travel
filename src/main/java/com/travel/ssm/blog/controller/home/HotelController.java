@@ -59,7 +59,6 @@ public class HotelController {
 
             // 计算当前页的起始和结束索引
             int startIndex = (page - 1) * PAGE_SIZE;
-            int endIndex = Math.min(startIndex + PAGE_SIZE, hotelList.length);
 
             // 获取当前页的酒店ID
             String[] hotelIds = Arrays.stream(hotelList)
@@ -71,14 +70,13 @@ public class HotelController {
 
             // 1. 使用酒店搜索API直接获取酒店报价
             HotelOfferSearch[] offers = amadeus.shopping.hotelOffersSearch.get(
-                    Params.with("hotelIds", "HNPARSPC")
-                            .and("checkInDate", "2025-04-11")
-                            .and("checkOutDate", "2025-04-13")
-                            .and("adults", "1")
+                    Params.with("hotelIds", hotelIds)
+                            .and("checkInDate", checkInDate)
+                            .and("checkOutDate", checkOutDate)
+                            .and("adults", adults)
                             .and("paymentPolicy", "NONE")
                             .and("bestRateOnly", "true")
             );
-
             if (hotelIds.length == 0) {
                 return Result.create(400, "No valid hotel IDs found");
             }
