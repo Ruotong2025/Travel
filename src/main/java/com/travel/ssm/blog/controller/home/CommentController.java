@@ -227,4 +227,35 @@ public class CommentController {
             return new JsonResult().fail("删除失败");
         }
     }
+
+    @RequestMapping(value = "/admin/comment/edit/{id}", method = {RequestMethod.POST})
+    public JsonResult editComment(@PathVariable("id") Integer id, 
+                                @RequestParam("commentContent") String commentContent,
+                                HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return new JsonResult().fail("请先登录");
+        }
+
+        Comment comment = commentService.getCommentById(id);
+        if (comment == null) {
+            return new JsonResult().fail("评论不存在");
+        }
+
+        // 检查权限：只有评论作者或文章作者可以编辑评论
+        if (!user.getUserId().equals(comment.getCommentUserId()) && !user.getUserId().equals(comment.getArticle().getArticleUserId())) {
+            return new JsonResult().fail("您没有权限编辑此评论");
+        }
+
+        try {
+            // 过滤内容，防止XSS攻击
+            commentContent = HtmlUtil.escape(commentContent);
+            comment.setCommentContent(commentContent);
+            commentService.updateComment(comment);
+            return new JsonResult().ok();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new JsonResult().fail("编辑失败");
+        }
+    }
 }

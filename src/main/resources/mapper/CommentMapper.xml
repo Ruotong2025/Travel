@@ -89,6 +89,12 @@
         where comment_id = #{commentId,jdbcType=INTEGER}
     </update>
 
+    <update id="updateComment" parameterType="com.travel.ssm.blog.entity.Comment">
+        UPDATE comment
+        SET comment_content = #{commentContent},
+            comment_update_time = NOW()
+        WHERE comment_id = #{commentId}
+    </update>
 
     <select id="listCommentByArticleId" resultType="com.travel.ssm.blog.entity.Comment">
         SELECT

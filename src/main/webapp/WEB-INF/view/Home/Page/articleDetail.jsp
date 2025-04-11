@@ -19,6 +19,13 @@
             .entry-content {
                 min-height: 300px;
             }
+            .comment-edit-form { margin-top: 10px; }
+            .edit-comment-content { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+            .edit-buttons { margin-top: 10px; text-align: right; }
+            .edit-buttons button { padding: 5px 15px; margin-left: 10px; border: none; border-radius: 4px; cursor: pointer; }
+            .save-edit { background-color: #888; color: white; }
+            .cancel-edit { background-color: #aaa; color: white; }
+            .comment-edit-link { color: #2196F3; margin-left: 5px; }
         </style>
     </rapid:override>
 </rapid:override>
@@ -322,6 +329,7 @@
                                                                     pattern="yyyy年MM月dd日 HH:mm:ss"/>&nbsp;
                                                     <c:if test="${sessionScope.user.userId eq c.commentUserId || sessionScope.user.userId eq article.articleUserId}">
                                                         <a href="javascript:void(0)" class="comment-delete-link" onclick="deleteComment(${c.commentId})">删除</a>
+                                                        <a href="javascript:void(0)" class="comment-edit-link" onclick="editComment(${c.commentId})">编辑</a>
                                                     </c:if>
                                                     <span class="floor"> &nbsp;${c.commentFloor}楼 </span>
                                                 </span>
@@ -363,6 +371,7 @@
                                                                         pattern="yyyy年MM月dd日 HH:mm:ss"/>&nbsp;
                                                         <c:if test="${sessionScope.user.userId eq c2.commentUserId || sessionScope.user.userId eq article.articleUserId}">
                                                             <a href="javascript:void(0)" class="comment-delete-link" onclick="deleteComment(${c2.commentId})">删除</a>
+                                                            <a href="javascript:void(0)" class="comment-edit-link" onclick="editComment(${c2.commentId})">编辑</a>
                                                         </c:if>
                                                         <span class="floor"> &nbsp;${c2.commentFloor}层 </span>
                                                     </span>
@@ -669,6 +678,11 @@
                 deleteButton = '<a href="javascript:void(0)" class="comment-delete-link" onclick="deleteComment(' + comment.commentId + ')">删除</a>';
             }
             
+            var editButton = '';
+            if (currentUserId == comment.commentUserId || currentUserId == articleUserId) {
+                editButton = '<a href="javascript:void(0)" class="comment-edit-link" onclick="editComment(' + comment.commentId + ')">编辑</a>';
+            }
+            
             var commentHtml = '<li class="comments-anchor">' +
                 '<ul id="anchor-comment-' + comment.commentId + '"></ul>' +
                 '</li>' +
@@ -685,7 +699,7 @@
                 '<a rel="nofollow" class="comment-reply-link" href="javascript:void(0)" onclick="var commentBody=$(this).closest(\'.comment-body\');var commentId=commentBody.attr(\'id\').replace(\'div-comment-\',\'\');var commentAuthorName=commentBody.find(\'strong\').first().text().trim();$(\'#reply-title-word\').html(\'回复给 \'+commentAuthorName);$(\'#comment_pid\').val(commentId);$(\'input[name=commentPid]\').attr(\'value\',commentId);$(\'input[name=commentPname]\').attr(\'value\',commentAuthorName);$(\'#cancel-comment-reply-link\').show();$(\'html,body\').animate({scrollTop:$(\'#respond\').offset().top},500);return false;">回复</a>' +
                 '</span>' +
                 new Date(comment.commentCreateTime).toLocaleString() + '&nbsp;' +
-                deleteButton +
+                deleteButton + '&nbsp;' + editButton +
                 '<span class="floor"> &nbsp;' + comment.commentFloor + '楼 </span>' +
                 '</span>' +
                 '</span>' +
@@ -722,6 +736,11 @@
                     deleteButton = '<a href="javascript:void(0)" class="comment-delete-link" onclick="deleteComment(' + comment.commentId + ')">删除</a>';
                 }
                 
+                var editButton = '';
+                if (currentUserId == comment.commentUserId || currentUserId == articleUserId) {
+                    editButton = '<a href="javascript:void(0)" class="comment-edit-link" onclick="editComment(' + comment.commentId + ')">编辑</a>';
+                }
+                
                 var commentHtml = '<li class="comments-anchor">' +
                     '<ul id="anchor-comment-' + comment.commentId + '"></ul>' +
                     '</li>' +
@@ -738,7 +757,7 @@
                     '<a rel="nofollow" class="comment-reply-link" href="javascript:void(0)" onclick="var commentBody=$(this).closest(\'.comment-body\');var commentId=commentBody.attr(\'id\').replace(\'div-comment-\',\'\');var commentAuthorName=commentBody.find(\'strong\').first().text().trim();$(\'#reply-title-word\').html(\'回复给 \'+commentAuthorName);$(\'#comment_pid\').val(commentId);$(\'input[name=commentPid]\').attr(\'value\',commentId);$(\'input[name=commentPname]\').attr(\'value\',commentAuthorName);$(\'#cancel-comment-reply-link\').show();$(\'html,body\').animate({scrollTop:$(\'#respond\').offset().top},500);return false;">回复</a>' +
                     '</span>' +
                     new Date(comment.commentCreateTime).toLocaleString() + '&nbsp;' +
-                    deleteButton +
+                    deleteButton + '&nbsp;' + editButton +
                     '<span class="floor"> &nbsp;' + comment.commentFloor + '层 </span>' +
                     '</span>' +
                     '</span>' +
@@ -759,6 +778,56 @@
             } else {
                 console.error("找不到父评论: " + comment.commentPid);
             }
+        }
+
+        // 添加编辑评论函数
+        function editComment(commentId) {
+            var commentContent = $("#div-comment-" + commentId).find("p").text().trim();
+            var editForm = '<div class="comment-edit-form">' +
+                '<textarea class="edit-comment-content" rows="4">' + commentContent + '</textarea>' +
+                '<div class="edit-buttons">' +
+                '<button class="save-edit" onclick="saveEdit(' + commentId + ')">保存</button>' +
+                '<button class="cancel-edit" onclick="cancelEdit(' + commentId + ')">取消</button>' +
+                '</div>' +
+                '</div>';
+            
+            $("#div-comment-" + commentId).find("p").hide();
+            $("#div-comment-" + commentId).find("p").after(editForm);
+        }
+
+        // 保存编辑
+        function saveEdit(commentId) {
+            var newContent = $("#div-comment-" + commentId).find(".edit-comment-content").val().trim();
+            if (!newContent) {
+                layer.msg("评论内容不能为空");
+                return;
+            }
+            
+            $.ajax({
+                type: "POST",
+                url: '/admin/comment/edit/' + commentId,
+                data: {
+                    commentContent: newContent
+                },
+                success: function(result) {
+                    if (result.code === 0) {
+                        $("#div-comment-" + commentId).find("p").text(newContent).show();
+                        $("#div-comment-" + commentId).find(".comment-edit-form").remove();
+                        layer.msg("评论已更新");
+                    } else {
+                        layer.msg(result.msg || "更新失败");
+                    }
+                },
+                error: function() {
+                    layer.msg("更新失败，请稍后再试");
+                }
+            });
+        }
+
+        // 取消编辑
+        function cancelEdit(commentId) {
+            $("#div-comment-" + commentId).find("p").show();
+            $("#div-comment-" + commentId).find(".comment-edit-form").remove();
         }
     </script>
 
