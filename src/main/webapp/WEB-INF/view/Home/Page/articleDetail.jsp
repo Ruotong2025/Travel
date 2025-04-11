@@ -674,12 +674,10 @@
             var currentUserId = "${sessionScope.user.userId}";
             var articleUserId = "${article.articleUserId}";
             var deleteButton = '';
+            var editButton = '';
+            
             if (currentUserId == comment.commentUserId || currentUserId == articleUserId) {
                 deleteButton = '<a href="javascript:void(0)" class="comment-delete-link" onclick="deleteComment(' + comment.commentId + ')">删除</a>';
-            }
-            
-            var editButton = '';
-            if (currentUserId == comment.commentUserId || currentUserId == articleUserId) {
                 editButton = '<a href="javascript:void(0)" class="comment-edit-link" onclick="editComment(' + comment.commentId + ')">编辑</a>';
             }
             
@@ -699,7 +697,7 @@
                 '<a rel="nofollow" class="comment-reply-link" href="javascript:void(0)" onclick="var commentBody=$(this).closest(\'.comment-body\');var commentId=commentBody.attr(\'id\').replace(\'div-comment-\',\'\');var commentAuthorName=commentBody.find(\'strong\').first().text().trim();$(\'#reply-title-word\').html(\'回复给 \'+commentAuthorName);$(\'#comment_pid\').val(commentId);$(\'input[name=commentPid]\').attr(\'value\',commentId);$(\'input[name=commentPname]\').attr(\'value\',commentAuthorName);$(\'#cancel-comment-reply-link\').show();$(\'html,body\').animate({scrollTop:$(\'#respond\').offset().top},500);return false;">回复</a>' +
                 '</span>' +
                 new Date(comment.commentCreateTime).toLocaleString() + '&nbsp;' +
-                deleteButton + '&nbsp;' + editButton +
+                deleteButton + ' ' + editButton +
                 '<span class="floor"> &nbsp;' + comment.commentFloor + '楼 </span>' +
                 '</span>' +
                 '</span>' +
@@ -732,12 +730,10 @@
                 var currentUserId = "${sessionScope.user.userId}";
                 var articleUserId = "${article.articleUserId}";
                 var deleteButton = '';
+                var editButton = '';
+                
                 if (currentUserId == comment.commentUserId || currentUserId == articleUserId) {
                     deleteButton = '<a href="javascript:void(0)" class="comment-delete-link" onclick="deleteComment(' + comment.commentId + ')">删除</a>';
-                }
-                
-                var editButton = '';
-                if (currentUserId == comment.commentUserId || currentUserId == articleUserId) {
                     editButton = '<a href="javascript:void(0)" class="comment-edit-link" onclick="editComment(' + comment.commentId + ')">编辑</a>';
                 }
                 
@@ -757,7 +753,7 @@
                     '<a rel="nofollow" class="comment-reply-link" href="javascript:void(0)" onclick="var commentBody=$(this).closest(\'.comment-body\');var commentId=commentBody.attr(\'id\').replace(\'div-comment-\',\'\');var commentAuthorName=commentBody.find(\'strong\').first().text().trim();$(\'#reply-title-word\').html(\'回复给 \'+commentAuthorName);$(\'#comment_pid\').val(commentId);$(\'input[name=commentPid]\').attr(\'value\',commentId);$(\'input[name=commentPname]\').attr(\'value\',commentAuthorName);$(\'#cancel-comment-reply-link\').show();$(\'html,body\').animate({scrollTop:$(\'#respond\').offset().top},500);return false;">回复</a>' +
                     '</span>' +
                     new Date(comment.commentCreateTime).toLocaleString() + '&nbsp;' +
-                    deleteButton + '&nbsp;' + editButton +
+                    deleteButton + ' ' + editButton +
                     '<span class="floor"> &nbsp;' + comment.commentFloor + '层 </span>' +
                     '</span>' +
                     '</span>' +

@@ -58,10 +58,6 @@
                         </div>
                     </header>
 
-
-
-                    </header>
-
                     <div style="display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: #666; white-space: nowrap; font-weight: bold;">
                         <!-- 目的地居中 -->
                         <div style="text-align: left; flex: 1;">
@@ -74,16 +70,14 @@
                         </div>
                     </div>
 
-
-
                     <div class="entry-content">
-                        <div class="archive-content" class="archive-content" style="display: -webkit-box;
-                                                                                -webkit-line-clamp: 3;
-                                                                                -webkit-box-orient: vertical;
-                                                                                overflow: hidden;
-                                                                                text-overflow: ellipsis;
-                                                                                height: 4.5em;
-                                                                                line-height: 1.5em;">
+                        <div class="archive-content" style="display: -webkit-box;
+                                                            -webkit-line-clamp: 3;
+                                                            -webkit-box-orient: vertical;
+                                                            overflow: hidden;
+                                                            text-overflow: ellipsis;
+                                                            height: 4.5em;
+                                                            line-height: 1.5em;">
                                 ${a.articleSummary}
                         </div>
                         <span class="title-l"></span>

@@ -1,11 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>403 没有权限操作</title>
+    <title>403 禁止访问</title>
     <style type="text/css">
         body,div,h3,h4,li,ol{margin:0;padding:0}
         body{font:14px/1.5 'Microsoft YaHei','微软雅黑',Helvetica,Sans-serif;min-width:1200px;background:#f0f1f3;}
@@ -33,15 +33,14 @@
     <div class="error-page-container">
         <div class="error-page-main">
             <h3>
-                <strong>403</strong>很抱歉，您没有权限操作！
+                <strong>403</strong>很抱歉，您没有权限访问该页面！
             </h3>
             <div class="error-page-actions">
                 <div>
                     <h4>可能原因：</h4>
                     <ol>
-                        <li>访问了其他用户的数据</li>
-                        <li>系统异常</li>
-                        <li>输入的网址不正确</li>
+                        <li>您没有登录</li>
+                        <li>您没有该权限</li>
                     </ol>
                 </div>
                 <div>
@@ -49,9 +48,6 @@
                     <ol>
                         <li><a href="/">返回首页</a></li>
                         <li><a href="https://travel.com/message.html">留言反馈</a></li>
-                        <li>
-                            <a target="_blank" rel="external nofollow" href="http://wpa.qq.com/msgrd?v=3&amp;uin=847064370&amp;site=qq&amp;menu=yes"><i class="fa fa-qq"></i>联系站长</a>
-                        </li>
                     </ol>
                 </div>
             </div>
