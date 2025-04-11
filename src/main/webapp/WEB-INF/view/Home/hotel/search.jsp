@@ -191,26 +191,28 @@
         }
         .offer-section {
             margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .offer-section h6 {
             color: #2c3e50;
-            margin-bottom: 10px;
+            margin: 0;
             display: flex;
             align-items: center;
             gap: 8px;
+            min-width: 120px;
         }
         .offer-section .content {
-            margin-left: 25px;
+            flex: 1;
         }
-        .price-section {
-            background-color: #fff;
-            padding: 12px 15px;
-            border-radius: 5px;
-            margin: 10px 0;
+        .room-category {
+            display: inline-block;
+            margin-left: 10px;
         }
-        .price-label {
-            color: #666;
-            font-weight: bold;
+        .room-category .badge {
+            padding: 6px 10px;
+            background-color: #3498db;
         }
         .price-value {
             font-weight: bold;
@@ -518,9 +520,34 @@
             ]
         };
 
-        // Update city options when country changes
+        // Set initial values if they exist
+        var initialCountry = '${country}';
+        var initialCityCode = '${cityCode}';
+        
+        // Load saved selections from localStorage
+        var savedCountry = localStorage.getItem('selectedCountry');
+        var savedCity = localStorage.getItem('selectedCity');
+        
+        // Use saved values if no initial values are set
+        if (!initialCountry && savedCountry) {
+            initialCountry = savedCountry;
+        }
+        if (!initialCityCode && savedCity) {
+            initialCityCode = savedCity;
+        }
+        
+        if (initialCountry) {
+            $('#country').val(initialCountry).trigger('change');
+            if (initialCityCode) {
+                $('#cityCode').val(initialCityCode);
+            }
+        }
+
+        // Save selections to localStorage when they change
         $('#country').on('change', function() {
             var country = $(this).val();
+            localStorage.setItem('selectedCountry', country);
+            
             var $citySelect = $('#cityCode');
             $citySelect.empty();
             $citySelect.append('<option value="">Select City</option>');
@@ -531,18 +558,18 @@
                         .attr('value', city.code)
                         .text(city.name));
                 });
+                
+                // Restore saved city selection if it exists
+                var savedCity = localStorage.getItem('selectedCity');
+                if (savedCity) {
+                    $citySelect.val(savedCity);
+                }
             }
         });
 
-        // Set initial values if they exist
-        var initialCountry = '${country}';
-        var initialCityCode = '${cityCode}';
-        if (initialCountry) {
-            $('#country').val(initialCountry).trigger('change');
-            if (initialCityCode) {
-                $('#cityCode').val(initialCityCode);
-            }
-        }
+        $('#cityCode').on('change', function() {
+            localStorage.setItem('selectedCity', $(this).val());
+        });
 
         // Trigger change event on page load if country is selected
         if ($('#country').val()) {
@@ -597,12 +624,12 @@
                             detailsHtml += '<div class="content">';
                             detailsHtml += offer.room.type;
                             if (offer.room.typeEstimated && offer.room.typeEstimated.category) {
-                                detailsHtml += '<div class="room-category">';
+                                detailsHtml += '<span class="room-category">';
                                 detailsHtml += '<span class="badge badge-info">';
                                 detailsHtml += '<i class="fa fa-star"></i>';
-                                detailsHtml += 'Category: ' + offer.room.typeEstimated.category;
+                                detailsHtml += offer.room.typeEstimated.category;
                                 detailsHtml += '</span>';
-                                detailsHtml += '</div>';
+                                detailsHtml += '</span>';
                             }
                             detailsHtml += '</div>';
                             detailsHtml += '</div>';
