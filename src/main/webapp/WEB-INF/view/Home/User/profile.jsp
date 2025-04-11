@@ -138,9 +138,9 @@
                         </div>
                     </div>
                 </form>
-            </article>>
-        </main>>
-    </div>>
+            </article>
+        </main>
+    </div>
 
 
 
@@ -154,10 +154,6 @@
 <%--侧边栏 end--%>
 
 <rapid:override name="footer-script">
-
-    <script>
-
-    </script>
 </rapid:override>
 
 <%@ include file="../Public/framework.jsp" %>
