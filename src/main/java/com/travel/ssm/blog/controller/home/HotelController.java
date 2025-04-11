@@ -7,13 +7,16 @@ import com.amadeus.resources.Hotel;
 import com.amadeus.resources.HotelOfferSearch;
 import com.amadeus.resources.HotelOfferSearch.Offer;
 import com.travel.ssm.blog.entity.*;
-import lombok.Data;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
+@Controller
 @RequestMapping("/hotel")
 public class HotelController {
 
@@ -22,15 +25,85 @@ public class HotelController {
     private static final int PAGE_SIZE = 10;
 
     @GetMapping("/search")
-    public Result searchHotels(
-            @RequestParam(defaultValue = "PAR") String cityCode,
+    public String searchHotels(
+            @RequestParam String cityCode,
             @RequestParam(defaultValue = "5") int radius,
-            @RequestParam(defaultValue = "5") int rating,
-            @RequestParam(defaultValue = "1") int adults,
-            @RequestParam(defaultValue = "2024-12-01") String checkInDate,
-            @RequestParam(defaultValue = "2024-12-02") String checkOutDate,
+            @RequestParam int rating,
+            @RequestParam int adults,
+            @RequestParam String checkInDate,
+            @RequestParam String checkOutDate,
             @RequestParam(defaultValue = "10") int hotels,
-            @RequestParam(defaultValue = "1") int page) {
+            @RequestParam(defaultValue = "1") int page,
+            Model model) {
+
+        // 创建Amadeus客户端
+        Amadeus amadeus = Amadeus
+                .builder(AMADEUS_API_KEY, AMADEUS_API_SECRET)
+                .setLogLevel("debug")
+                .setHostname("test")
+                .build();
+
+        List<Hotel> hotelList = new ArrayList<>();
+        int totalPages = 0;
+
+        try {
+            // 使用酒店列表API获取酒店ID
+            Hotel[] hotelsArray = amadeus.referenceData.locations.hotels.byCity.get(
+                    Params.with("cityCode", cityCode.toUpperCase())
+                            .and("radius", radius)
+                            .and("radiusUnit", "KM")
+                            .and("ratings", rating)
+                            .and("hotelSource", "ALL")
+            );
+
+            if (hotelsArray == null || hotelsArray.length == 0) {
+                model.addAttribute("error", "No hotels found");
+                return "Home/hotel/search";
+            }
+
+            // 计算总页数
+            totalPages = (int) Math.ceil((double) hotelsArray.length / PAGE_SIZE);
+            if (page < 1 || page > totalPages) {
+                model.addAttribute("error", "Invalid page number");
+                return "Home/hotel/search";
+            }
+
+            // 计算当前页的起始和结束索引
+            int startIndex = (page - 1) * PAGE_SIZE;
+            int endIndex = Math.min(startIndex + PAGE_SIZE, hotelsArray.length);
+
+            // 获取当前页的酒店
+            for (int i = startIndex; i < endIndex; i++) {
+                hotelList.add(hotelsArray[i]);
+            }
+
+        } catch (ResponseException e) {
+            model.addAttribute("error", "Error occurred while searching hotels: " + e.getMessage());
+            return "Home/hotel/search";
+        }
+
+        // 添加结果到模型
+        model.addAttribute("hotelList", hotelList);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("cityCode", cityCode);
+        model.addAttribute("radius", radius);
+        model.addAttribute("rating", rating);
+        model.addAttribute("adults", adults);
+        model.addAttribute("checkInDate", checkInDate);
+        model.addAttribute("checkOutDate", checkOutDate);
+        model.addAttribute("hotels", hotels);
+
+        return "Home/hotel/search";
+    }
+
+    @GetMapping("/details")
+    @ResponseBody
+    public HotelSearchResult getHotelDetails(
+            @RequestParam String hotelId,
+            @RequestParam String checkInDate,
+            @RequestParam String checkOutDate,
+            @RequestParam int adults) {
 
         // 创建Amadeus客户端
         Amadeus amadeus = Amadeus
@@ -40,39 +113,9 @@ public class HotelController {
                 .build();
 
         try {
-            // 使用酒店列表API获取酒店ID
-            Hotel[] hotelList = amadeus.referenceData.locations.hotels.byCity.get(
-                    Params.with("cityCode", cityCode.toUpperCase())
-                            .and("radius", radius)
-                            .and("radiusUnit", "KM")
-                            .and("ratings", rating)
-                            .and("hotelSource", "ALL")
-            );
-
-            if (hotelList == null || hotelList.length == 0) {
-                return Result.create(400, "No hotels found");
-            }
-
-            // 计算总页数
-            int totalPages = (int) Math.ceil((double) hotelList.length / PAGE_SIZE);
-            if (page < 1 || page > totalPages) {
-                return Result.create(400, "Invalid page number");
-            }
-
-            // 计算当前页的起始和结束索引
-            int startIndex = (page - 1) * PAGE_SIZE;
-
-            // 获取当前页的酒店ID
-            String[] hotelIds = Arrays.stream(hotelList)
-                    .skip(startIndex)
-                    .limit(PAGE_SIZE)
-                    .map(Hotel::getHotelId)
-                    .filter(id -> id != null && !id.isEmpty())
-                    .toArray(String[]::new);
-
-            // 1. 使用酒店搜索API直接获取酒店报价
+            // 使用酒店搜索API获取酒店报价
             HotelOfferSearch[] offers = amadeus.shopping.hotelOffersSearch.get(
-                    Params.with("hotelIds", hotelIds)
+                    Params.with("hotelIds", hotelId)
                             .and("checkInDate", checkInDate)
                             .and("checkOutDate", checkOutDate)
                             .and("adults", adults)
@@ -80,28 +123,27 @@ public class HotelController {
                             .and("bestRateOnly", "true")
             );
 
-            if (offers != null) {
-                for (HotelOfferSearch hotelOffer : offers) {
-                    HotelSearchResult result = new HotelSearchResult();
-                    result.setName(hotelOffer.getHotel().getName());
-                    result.setRating(rating);
-                    result.setCityCode(cityCode);
-                    result.setAdults(adults);
-                    result.setCheckInDate(checkInDate);
-                    result.setCheckOutDate(checkOutDate);
-                    result.setOffers(hotelOffer.getOffers());
-
-                }
-            }
-
-            if (hotelIds.length == 0) {
-                return Result.create(400, "No valid hotel IDs found");
+            if (offers != null && offers.length > 0 && offers[0] != null && offers[0].getHotel() != null) {
+                HotelSearchResult result = new HotelSearchResult();
+                result.setName(offers[0].getHotel().getName());
+                result.setHotelId(hotelId);
+                result.setOffers(offers[0].getOffers());
+                return result;
             }
         } catch (ResponseException e) {
-            throw new RuntimeException(e);
-        } finally {
-
+            e.printStackTrace();
         }
+
         return null;
+    }
+
+    @GetMapping("/search/form")
+    public String showSearchForm(Model model) {
+        // 设置默认值
+        model.addAttribute("radius", 5);
+        model.addAttribute("rating", 5);
+        model.addAttribute("adults", 1);
+        model.addAttribute("hotels", 10);
+        return "Home/hotel/search";
     }
 }
