@@ -5,7 +5,9 @@ import com.amadeus.Params;
 import com.amadeus.exceptions.ResponseException;
 import com.amadeus.resources.Hotel;
 import com.amadeus.resources.HotelOfferSearch;
-import com.travel.ssm.blog.entity.Result;
+import com.amadeus.resources.HotelOfferSearch.Offer;
+import com.travel.ssm.blog.entity.*;
+import lombok.Data;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -77,6 +79,21 @@ public class HotelController {
                             .and("paymentPolicy", "NONE")
                             .and("bestRateOnly", "true")
             );
+
+            if (offers != null) {
+                for (HotelOfferSearch hotelOffer : offers) {
+                    HotelSearchResult result = new HotelSearchResult();
+                    result.setName(hotelOffer.getHotel().getName());
+                    result.setRating(rating);
+                    result.setCityCode(cityCode);
+                    result.setAdults(adults);
+                    result.setCheckInDate(checkInDate);
+                    result.setCheckOutDate(checkOutDate);
+                    result.setOffers(hotelOffer.getOffers());
+
+                }
+            }
+
             if (hotelIds.length == 0) {
                 return Result.create(400, "No valid hotel IDs found");
             }

@@ -1,6 +1,8 @@
 package com.travel.ssm.blog.entity;
 
 import lombok.Data;
+import com.amadeus.resources.HotelOfferSearch.Offer;
+import java.util.List;
 
 @Data
 public class HotelSearchResult {
@@ -11,12 +13,6 @@ public class HotelSearchResult {
     private String checkOutDate;
     private int adults;
     private String description;
-    private Price price;
+    private Offer[] offers;
 
-    @Data
-    public static class Price {
-        private String currency;
-        private String total;
-        private String base;
-    }
 } 
