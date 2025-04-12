@@ -27,7 +27,7 @@
                         <a href="/login">Login</a> | <a href="/register">Register</a>
                     </c:when>
                     <c:otherwise>
-                        <a href="/admin">Welcome ${sessionScope.user.userName}</a> | <a href="/logout" class="logout-btn"><i class="fa fa-sign-out"></i> Logout</a>
+                        <a href="/article">Welcome ${sessionScope.user.userName}</a> | <a href="/logout" class="logout-btn"><i class="fa fa-sign-out"></i> Logout</a>
                     </c:otherwise>
                 </c:choose>
             </div>
