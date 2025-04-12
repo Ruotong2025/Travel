@@ -24,7 +24,7 @@ import static com.alibaba.fastjson.JSON.toJavaObject;
 public class GoWeatherController {
 
     private static final Logger LOGGER = Logger.getLogger(GoWeatherController.class.getName());
-    private final String ACCUWEATHER_API_KEY = "aAnW7L4ZhJ8MVQq7dYC6VHpIx6v8dAcc";
+    private final String ACCUWEATHER_API_KEY = "FkIsbYodn41GuAY1OE2cMfYxpKXGxSNM";
     private final String ACCUWEATHER_BASE_URL = "http://dataservice.accuweather.com/currentconditions/v1/topcities/50";
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
@@ -77,7 +77,6 @@ public class GoWeatherController {
                     // Continue with the next city even if one fails
                 }
             }
-
             // Log successful response
             LOGGER.info("Successfully fetched weather data for " + weatherList.size() + " cities");
             return ResponseEntity.ok(weatherList);

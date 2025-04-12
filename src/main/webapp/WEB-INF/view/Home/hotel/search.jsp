@@ -10,6 +10,7 @@
     </div>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         .search-form {
             background-color: #f8f9fa;
@@ -222,6 +223,125 @@
             font-weight: bold;
             color: #e74c3c;
         }
+        /* 天气显示栏样式 */
+        .weather-container {
+            background: #f8f8f8;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .weather-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .weather-title .fa-sync-alt {
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.5s;
+        }
+        
+        .weather-title .fa-sync-alt:hover {
+            transform: rotate(180deg);
+        }
+        
+        .weather-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #fff;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .city-name {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .weather-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .weather-text {
+            color: #555;
+        }
+        
+        .temperature {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        
+        .observation-time {
+            font-size: 12px;
+            color: #999;
+            text-align: right;
+        }
+        
+        .loading-weather {
+            text-align: center;
+            padding: 15px;
+            color: #666;
+        }
+        
+        /* 滚动区域样式 */
+        .weather-scroll-container {
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 5px;
+            scrollbar-width: thin;
+        }
+        
+        /* 自定义滚动条样式 */
+        .weather-scroll-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .weather-scroll-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .weather-scroll-container::-webkit-scrollbar-thumb {
+            background: #3498db;
+            border-radius: 10px;
+        }
+        
+        .weather-scroll-container::-webkit-scrollbar-thumb:hover {
+            background: #2980b9;
+        }
+        
+        /* 天气控制面板 */
+        .weather-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .weather-filter {
+            display: flex;
+            align-items: center;
+        }
+        
+        .weather-filter select {
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            margin-left: 5px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -232,137 +352,171 @@
         <div class="alert alert-danger">${error}</div>
     </c:if>
 
-    <div class="search-form">
-        <form action="/hotel/search" method="get" id="searchForm">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>City Code</label>
-                        <div class="city-selector">
-                            <select class="form-control" id="country" name="country">
-                                <option value="">Select Country</option>
-                                <option value="FR">France</option>
-                                <option value="US">United States</option>
-                                <option value="GB">United Kingdom</option>
-                                <option value="IT">Italy</option>
-                                <option value="ES">Spain</option>
-                                <option value="DE">Germany</option>
-                                <option value="JP">Japan</option>
-                                <option value="CN">China</option>
-                                <option value="AU">Australia</option>
-                                <option value="CA">Canada</option>
-                            </select>
-                            <select class="form-control" id="cityCode" name="cityCode">
-                                <option value="">Select City</option>
-                                <!-- Cities will be populated dynamically -->
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="radius">Radius (KM)</label>
-                        <input type="number" class="form-control" id="radius" name="radius" value="${radius}">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="rating">Rating</label>
-                        <select class="form-control" id="rating" name="rating">
-                            <c:forEach begin="1" end="5" var="i">
-                                <option value="${i}" ${rating == i ? 'selected' : ''}>${i} Star</option>
-                            </c:forEach>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="adults">Adults</label>
-                        <input type="number" class="form-control" id="adults" name="adults" value="${adults}">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="checkInDate">Check-in Date</label>
-                        <input type="text" class="form-control datepicker" id="checkInDate" name="checkInDate" value="${checkInDate}">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="checkOutDate">Check-out Date</label>
-                        <input type="text" class="form-control datepicker" id="checkOutDate" name="checkOutDate" value="${checkOutDate}">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="hotels">Number of Hotels Every Page</label>
-                        <input type="number" class="form-control" id="hotels" name="hotels" value="${hotels}">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <button type="submit" class="btn btn-primary btn-block">Search</button>
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <c:if test="${not empty hotelList}">
-        <div class="search-results">
-            <h2>Search Results</h2>
-            <div class="row">
-                <c:forEach items="${hotelList}" var="hotel">
-                    <div class="col-md-6">
-                        <div class="card hotel-card">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <a href="#" class="hotel-link" 
-                                       data-hotel-id="${hotel.hotelId}"
-                                       data-check-in="${checkInDate}"
-                                       data-check-out="${checkOutDate}"
-                                       data-adults="${adults}">
-                                        ${hotel.name}
-                                    </a>
-                                </h5>
-                                <div class="hotel-details" style="display: none;">
-                                    <!-- Details will be loaded here -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="search-form">
+                <form action="/hotel/search" method="get" id="searchForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>City Code</label>
+                                <div class="city-selector">
+                                    <select class="form-control" id="country" name="country">
+                                        <option value="">Select Country</option>
+                                        <option value="FR">France</option>
+                                        <option value="US">United States</option>
+                                        <option value="GB">United Kingdom</option>
+                                        <option value="IT">Italy</option>
+                                        <option value="ES">Spain</option>
+                                        <option value="DE">Germany</option>
+                                        <option value="JP">Japan</option>
+                                        <option value="CN">China</option>
+                                        <option value="AU">Australia</option>
+                                        <option value="CA">Canada</option>
+                                    </select>
+                                    <select class="form-control" id="cityCode" name="cityCode">
+                                        <option value="">Select City</option>
+                                        <!-- Cities will be populated dynamically -->
+                                    </select>
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="radius">Radius (KM)</label>
+                                <input type="number" class="form-control" id="radius" name="radius" value="${radius}">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="rating">Rating</label>
+                                <select class="form-control" id="rating" name="rating">
+                                    <c:forEach begin="1" end="5" var="i">
+                                        <option value="${i}" ${rating == i ? 'selected' : ''}>${i} Star</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                </c:forEach>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="adults">Adults</label>
+                                <input type="number" class="form-control" id="adults" name="adults" value="${adults}">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="checkInDate">Check-in Date</label>
+                                <input type="text" class="form-control datepicker" id="checkInDate" name="checkInDate" value="${checkInDate}">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="checkOutDate">Check-out Date</label>
+                                <input type="text" class="form-control datepicker" id="checkOutDate" name="checkOutDate" value="${checkOutDate}">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="hotels">Number of Hotels Every Page</label>
+                                <input type="number" class="form-control" id="hotels" name="hotels" value="${hotels}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary btn-block">Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="search-results">
+                <h2>Search Results</h2>
+                <div class="row">
+                    <c:forEach items="${hotelList}" var="hotel">
+                        <div class="col-md-6">
+                            <div class="card hotel-card">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a href="#" class="hotel-link" 
+                                           data-hotel-id="${hotel.hotelId}"
+                                           data-check-in="${checkInDate}"
+                                           data-check-out="${checkOutDate}"
+                                           data-adults="${adults}">
+                                            ${hotel.name}
+                                        </a>
+                                    </h5>
+                                    <div class="hotel-details" style="display: none;">
+                                        <!-- Details will be loaded here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
+            </div>
+
+            <nav aria-label="Page navigation" class="pagination">
+                <ul class="pagination justify-content-center">
+                    <c:if test="${currentPage > 1}">
+                        <li class="page-item">
+                            <a class="page-link" href="/hotel/search?cityCode=${cityCode}&radius=${radius}&rating=${rating}&adults=${adults}&checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&hotels=${hotels}&page=${currentPage-1}">Previous</a>
+                        </li>
+                    </c:if>
+                    <c:forEach begin="1" end="${totalPages}" var="i">
+                        <li class="page-item ${currentPage == i ? 'active' : ''}">
+                            <a class="page-link" href="/hotel/search?cityCode=${cityCode}&radius=${radius}&rating=${rating}&adults=${adults}&checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&hotels=${hotels}&page=${i}">${i}</a>
+                        </li>
+                    </c:forEach>
+                    <c:if test="${currentPage < totalPages}">
+                        <li class="page-item">
+                            <a class="page-link" href="/hotel/search?cityCode=${cityCode}&radius=${radius}&rating=${rating}&adults=${adults}&checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&hotels=${hotels}&page=${currentPage+1}">Next</a>
+                        </li>
+                    </c:if>
+                </ul>
+            </nav>
+        </div>
+        
+        <!-- 添加天气显示栏 -->
+        <div class="col-md-4">
+            <div id="weather-widget" class="weather-container">
+                <h3 class="weather-title">
+                    <span><i class="fa fa-cloud"></i> 实时天气</span>
+                    <i class="fa fa-sync-alt" id="refresh-weather" title="刷新天气数据"></i>
+                </h3>
+                <div class="weather-controls">
+                    <div class="weather-filter">
+                        <label for="weather-sort">排序:</label>
+                        <select id="weather-sort" class="form-control-sm">
+                            <option value="name">按城市名称</option>
+                            <option value="temp-asc">按温度低-高</option>
+                            <option value="temp-desc" selected>按温度高-低</option>
+                        </select>
+                    </div>
+                    <span id="weather-count">0/50 城市</span>
+                </div>
+                <div id="weather-container">
+                    <div class="loading-weather">
+                        <i class="fa fa-spinner fa-spin"></i> 加载天气信息中...
+                    </div>
+                    <div class="weather-scroll-container">
+                        <div id="weather-content" style="display:none;">
+                            <!-- 天气内容将通过AJAX动态加载 -->
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <nav aria-label="Page navigation" class="pagination">
-            <ul class="pagination justify-content-center">
-                <c:if test="${currentPage > 1}">
-                    <li class="page-item">
-                        <a class="page-link" href="/hotel/search?cityCode=${cityCode}&radius=${radius}&rating=${rating}&adults=${adults}&checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&hotels=${hotels}&page=${currentPage-1}">Previous</a>
-                    </li>
-                </c:if>
-                <c:forEach begin="1" end="${totalPages}" var="i">
-                    <li class="page-item ${currentPage == i ? 'active' : ''}">
-                        <a class="page-link" href="/hotel/search?cityCode=${cityCode}&radius=${radius}&rating=${rating}&adults=${adults}&checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&hotels=${hotels}&page=${i}">${i}</a>
-                    </li>
-                </c:forEach>
-                <c:if test="${currentPage < totalPages}">
-                    <li class="page-item">
-                        <a class="page-link" href="/hotel/search?cityCode=${cityCode}&radius=${radius}&rating=${rating}&adults=${adults}&checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&hotels=${hotels}&page=${currentPage+1}">Next</a>
-                    </li>
-                </c:if>
-            </ul>
-        </nav>
-    </c:if>
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
 <script>
     $(document).ready(function() {
         // Initialize datepicker
@@ -688,6 +842,133 @@
                     $details.html(errorHtml);
                 }
             });
+        });
+
+        // 加载天气信息
+        loadWeatherData();
+        
+        // 每5分钟刷新一次天气数据
+        setInterval(loadWeatherData, 300000);
+    });
+    
+    function loadWeatherData() {
+        $('.loading-weather').show();
+        $('#weather-content').hide();
+        
+        $.ajax({
+            url: '/weather/top-cities',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                if (data && data.length > 0) {
+                    // 保存天气数据到全局变量以便排序使用
+                    window.weatherData = data;
+                    
+                    // 更新计数
+                    $('#weather-count').text(data.length + '/50 城市');
+                    
+                    // 根据当前选择的排序方式显示数据
+                    sortAndDisplayWeather();
+                } else {
+                    $('#weather-content').html('<p>暂无天气数据</p>');
+                }
+                $('#weather-content').show();
+                $('.loading-weather').hide();
+            },
+            error: function(xhr, status, error) {
+                $('#weather-content').html('<p>获取天气数据失败</p>');
+                $('#weather-content').show();
+                $('.loading-weather').hide();
+                console.error("Weather data error:", error);
+            }
+        });
+    }
+    
+    function sortAndDisplayWeather() {
+        if (!window.weatherData || !window.weatherData.length) return;
+        
+        var sortType = $('#weather-sort').val();
+        var data = [...window.weatherData]; // 复制数据以避免修改原始数据
+        
+        // 根据选择的方式排序
+        if (sortType === 'name') {
+            // 按城市名称排序
+            data.sort(function(a, b) {
+                return (a.localizedName || '').localeCompare(b.localizedName || '');
+            });
+        } else if (sortType === 'temp-asc') {
+            // 按温度从低到高排序
+            data.sort(function(a, b) {
+                var tempA = a.temperature && a.temperature.metric ? a.temperature.metric.value : 999;
+                var tempB = b.temperature && b.temperature.metric ? b.temperature.metric.value : 999;
+                return tempA - tempB;
+            });
+        } else if (sortType === 'temp-desc') {
+            // 按温度从高到低排序
+            data.sort(function(a, b) {
+                var tempA = a.temperature && a.temperature.metric ? a.temperature.metric.value : -999;
+                var tempB = b.temperature && b.temperature.metric ? b.temperature.metric.value : -999;
+                return tempB - tempA;
+            });
+        }
+        
+        // 显示排序后的数据
+        displayWeatherData(data);
+    }
+    
+    function displayWeatherData(weatherData) {
+        var html = '<div class="weather-list">';
+        
+        // 显示所有城市的天气
+        for (var i = 0; i < weatherData.length; i++) {
+            var city = weatherData[i];
+            var tempC = city.temperature && city.temperature.metric ? city.temperature.metric.value.toFixed(1) : 'N/A';
+            var tempF = city.temperature && city.temperature.imperial ? city.temperature.imperial.value.toFixed(1) : 'N/A';
+            
+            html += '<div class="weather-item">';
+            html += '<div class="city-name">' + (city.localizedName || 'Unknown City') + '</div>';
+            html += '<div class="weather-info">';
+            html += '<span class="weather-text">' + (city.weatherText || 'N/A') + '</span>';
+            html += '<span class="temperature">' + tempC + '°C / ' + tempF + '°F</span>';
+            html += '</div>';
+            
+            // 添加日期时间
+            var dateTime = city.localObservationDateTime ? new Date(city.localObservationDateTime) : new Date();
+            var formattedDate = dateTime.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            html += '<div class="observation-time">观测时间: ' + formattedDate + '</div>';
+            html += '</div>';
+        }
+        
+        html += '</div>';
+        $('#weather-content').html(html);
+    }
+    
+    $(document).ready(function() {
+        // 初始化天气数据
+        loadWeatherData();
+        
+        // 每5分钟刷新一次天气数据
+        setInterval(loadWeatherData, 300000);
+        
+        // 排序选择变化时重新排序并显示
+        $('#weather-sort').on('change', function() {
+            sortAndDisplayWeather();
+        });
+        
+        // 刷新按钮点击事件
+        $('#refresh-weather').on('click', function() {
+            $(this).addClass('fa-spin');
+            loadWeatherData();
+            setTimeout(function() {
+                $('#refresh-weather').removeClass('fa-spin');
+            }, 1000);
         });
     });
 </script>
