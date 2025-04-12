@@ -5,6 +5,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 
+<style>
+    .logout-btn {
+        color: #e74c3c;
+        transition: color 0.3s;
+    }
+    .logout-btn:hover {
+        color: #c0392b;
+        text-decoration: none;
+    }
+</style>
+
 <%--导航 start--%>
 <header id="masthead" class="site-header">
     <%--顶部菜单 start--%>
@@ -16,7 +27,7 @@
                         <a href="/login">Login</a> | <a href="/register">Register</a>
                     </c:when>
                     <c:otherwise>
-                        <a href="/admin">Welcom ${sessionScope.user.userName}</a>
+                        <a href="/admin">Welcome ${sessionScope.user.userName}</a> | <a href="/admin/logout" class="logout-btn"><i class="fa fa-sign-out"></i> Logout</a>
                     </c:otherwise>
                 </c:choose>
             </div>

@@ -52,6 +52,27 @@
             <mvc:mapping path="/**"/>
             <bean class="com.travel.ssm.blog.interceptor.HomeResourceInterceptor"/>
         </mvc:interceptor>
+
+        <!-- 全站登录拦截器 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <!-- 排除不需要拦截的路径 -->
+            <mvc:exclude-mapping path="/login"/>
+            <mvc:exclude-mapping path="/"/>
+            <mvc:exclude-mapping path="/register"/>
+            <mvc:exclude-mapping path="/loginVerify"/>
+            <mvc:exclude-mapping path="/registerSubmit"/>
+            <mvc:exclude-mapping path="/css/**"/>
+            <mvc:exclude-mapping path="/js/**"/>
+            <mvc:exclude-mapping path="/img/**"/>
+            <mvc:exclude-mapping path="/plugin/**"/>
+            <mvc:exclude-mapping path="/error/**"/>
+            <mvc:exclude-mapping path="/404"/>
+            <mvc:exclude-mapping path="/403"/>
+            <mvc:exclude-mapping path="/500"/>
+            <bean class="com.travel.ssm.blog.interceptor.LoginInterceptor"/>
+        </mvc:interceptor>
+
         <mvc:interceptor>
             <mvc:mapping path="/admin"/>
             <bean class="com.travel.ssm.blog.interceptor.LoginInterceptor"/>
