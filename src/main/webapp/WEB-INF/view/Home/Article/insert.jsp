@@ -150,6 +150,7 @@
 <rapid:override name="footer-script">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="/js/article/datepicker-init.js"></script>
     <script src="/js/article/upload.js"></script>
     <script>
 layui.use(['form', 'layedit', 'laydate'], function() {
@@ -237,23 +238,6 @@ layui.use(['form', 'layedit', 'laydate'], function() {
         form.render('select');
     });
 });
-
-$(document).ready(function() {
-    // 初始化日期选择器
-    $('#startDate').datepicker({
-        dateFormat: 'yy/mm/dd',
-        minDate: 0,
-        onSelect: function(selectedDate) {
-            $('#endDate').datepicker('option', 'minDate', selectedDate);
-        }
-    });
-
-    $('#endDate').datepicker({
-        dateFormat: 'yy/mm/dd',
-        minDate: 0
-    });
-});
-
     </script>
 </rapid:override>
 
