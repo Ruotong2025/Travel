@@ -19,12 +19,12 @@
 <rapid:override name="breadcrumb">
     <nav class="breadcrumb">
         <a class="crumbs" href="/">
-            <i class="fa fa-home"></i>首页</a>
+            <i class="fa fa-home"></i>Home</a>
         <i class="fa fa-angle-right"></i>
         <c:choose>
             <c:when test="${category != null}">
                 <a href="/category/${category.categoryId}">${category.categoryName}</a>
-                <i class="fa fa-angle-right"></i> 文章
+                <i class="fa fa-angle-right"></i> Articles
             </c:when>
             <c:otherwise>
                 该分类不存在
@@ -45,7 +45,7 @@
                 <c:when test="${pageInfo != null}">
                     <c:choose>
                         <c:when test="${pageInfo.list.size() != 0}">
-                            <%--文章列表-start--%>
+                            <%--Articles列表-start--%>
                             <c:forEach items="${pageInfo.list}" var="a">
 
                                 <article class="post">
@@ -95,7 +95,7 @@
                                         <span class="entry-meta">
                                                     <span class="date">
                                                          <fmt:formatDate value="${a.articleCreateTime}"
-                                                                         pattern="yyyy年MM月dd日"/>
+                                                                         pattern="yyyy/MM/dd"/>
                                                         &nbsp;&nbsp;
                                                     </span>
                                                     <span class="views">
@@ -108,7 +108,7 @@
                                                           <i class="fa fa-comment-o"></i>
                                                             <c:choose>
                                                                 <c:when test="${a.articleCommentCount==0}">
-                                                                    发表评论
+                                                                    Comment
                                                                 </c:when>
                                                                 <c:otherwise>
                                                                     ${a.articleCommentCount}
@@ -126,12 +126,12 @@
                                         </span>
                                 </article>
                             </c:forEach>
-                            <%--文章列表-end--%>
+                            <%--Articles列表-end--%>
                         </c:when>
                         <c:otherwise>
                             <section class="no-results not-found">
                                 <div class="post">
-                                    <p>该分类目前还没有文章！</p>
+                                    <p>该分类目前还没有Articles！</p>
                                     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
                                 </div>
                             </section>

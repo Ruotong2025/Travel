@@ -34,7 +34,7 @@
     <%--面包屑导航 start--%>
     <nav class="breadcrumb">
         <a class="crumbs" href="/">
-            <i class="fa fa-home"></i>首页
+            <i class="fa fa-home"></i>Home
         </a>
         <c:choose>
             <c:when test="${article.categoryList != null && article.categoryList.size() > 0}">
@@ -47,11 +47,11 @@
             </c:when>
             <c:otherwise>
                 <i class="fa fa-angle-right"></i>
-                <a>未分类</a>
+                <a>Unclassified</a>
             </c:otherwise>
         </c:choose>
         <i class="fa fa-angle-right"></i>
-        正文
+        Text
     </nav>
     <%--面包屑导航 end--%>
 </rapid:override>
@@ -71,7 +71,7 @@
                 <div style="display: flex; justify-content: space-between; font-size: 14px; color: #666; margin-top: 10px;">
                     <!-- 目的地居左 -->
                     <div style="flex: 1; text-align: left;">
-                        目的地：${article.articleDestination}
+                        Destination：${article.articleDestination}
                     </div>
 
                     <!-- 日期居右 -->
@@ -94,7 +94,7 @@
                             <c:if test="${sessionScope.user!=null && (sessionScope.user.userId == article.articleUserId || sessionScope.user.userRole == 'admin')}">
                                 <li class="edit-link">
                                     <a target="_blank" class="post-edit-link"
-                                       href="/admin/article/edit/${article.articleId}">编辑</a>
+                                       href="/admin/article/edit/${article.articleId}">Edit</a>
                                 </li>
                             </c:if>
                             <li class="comment">
@@ -158,18 +158,18 @@
                      class="avatar avatar-64 photo" height="64" width="64">
                 <ul class="postinfo">
                     <li></li>
-                    <li><strong>版权声明：</strong>本站原创文章，于<fmt:formatDate
+                    <li><strong>Copyright：</strong>Original articles from this website，published on <fmt:formatDate
                             value="${article.articleCreateTime}"
-                            pattern="yyyy-MM-dd"/>，由
+                            pattern="yyyy-MM-dd"/>，by
                         <strong>
                                 ${article.user.userNickname}
                         </strong>
-                        发表。
+
                     </li>
-                    <li class="reprinted"><strong>转载请注明：</strong>
+                    <li class="reprinted"><strong>Please indicate if you reprint：</strong>
                         <a href="/article/${article.articleId}"
                            rel="bookmark"
-                           title="本文固定链接 /article/${article.articleId}">
+                           title="Permalink /article/${article.articleId}">
                                 ${article.articleTitle} | ${options.optionSiteTitle}</a>
                     </li>
                 </ul>
@@ -182,7 +182,7 @@
                 <div class="wow fadeInUp" data-wow-delay="0.3s">
                     <aside id="related_post-2" class="widget">
                         <h3 class="widget-title">
-                            <span class="s-icon"></span>相关文章
+                            <span class="s-icon"></span>Relevant articles
                         </h3>
                         <div id="related_post_widget">
                             <ul>
@@ -197,7 +197,7 @@
                     </aside>
                         <%--猜你喜欢 start--%>
                     <aside id="hot_post-8" class="widget hot_post">
-                        <h3 class="widget-title"><span class="s-icon"></span>猜你喜欢</h3>
+                        <h3 class="widget-title"><span class="s-icon"></span>You may also like...</h3>
                         <div id="hot_post_widget">
                             <ul>
                                 <c:forEach items="${mostViewArticleList}" var="m">
@@ -223,7 +223,7 @@
                     <c:when test="${preArticle!=null}">
                         <a href="/article/${preArticle.articleId}" rel="next">
                             <span class="meta-nav">
-                                <span class="post-nav">上一篇
+                                <span class="post-nav">Previous
                                  <i class="fa fa-angle-left"></i>
                                 </span>
                                 <br>${preArticle.articleTitle}
@@ -233,8 +233,8 @@
                     <c:otherwise>
                               <span class="meta-nav">
                                     <span class="post-nav">
-                                        没有了<br>
-                                    </span>已是第一篇文章
+                                        None<br>
+                                    </span>It's the first article
                                 </span>
                     </c:otherwise>
                 </c:choose>
@@ -242,7 +242,7 @@
                     <c:when test="${afterArticle!=null}">
                         <a href="/article/${afterArticle.articleId}" rel="next">
                             <span class="meta-nav">
-                                <span class="post-nav">下一篇
+                                <span class="post-nav">Next
                                  <i class="fa fa-angle-right"></i>
                                 </span>
                                 <br>${afterArticle.articleTitle}
@@ -252,8 +252,8 @@
                     <c:otherwise>
                             <span class="meta-nav">
                                 <span class="post-nav">
-                                    没有了<br>
-                                </span>已是最后文章
+                                    None<br>
+                                </span>It's the last one
                              </span>
                     </c:otherwise>
                 </c:choose>
@@ -266,12 +266,12 @@
             <div class="scroll-comments"></div>
             <div id="comments" class="comments-area">
                 <div id="respond" class="comment-respond">
-                    <h3 id="reply-title" class="comment-reply-title"><span id="reply-title-word">发表评论</span>
+                    <h3 id="reply-title" class="comment-reply-title"><span id="reply-title-word">Add a comment</span>
                         <a rel="nofollow" id="cancel-comment-reply-link"
                            href="/article/${article.articleId}#respond"
-                           style="">取消回复</a>
+                           style="">Cancel reply</a>
                         <c:if test="${sessionScope.user == null}">
-                            <span style="color:red" >您未登录，登录后才能评论，<a href="/login" target="_blank">前往登录</a></span>
+                            <span style="color:red" >You are not logged in, you can only comment after logging in.<a href="/login" target="_blank">Log in</a></span>
                         </c:if>
                     </h3>
 
@@ -280,8 +280,8 @@
                             <div class="user_avatar">
                                 <img src="${sessionScope.user.userAvatar}"
                                      class="avatar avatar-64 photo" height="64" width="64">
-                                登录者：${sessionScope.user.userNickname}
-                                <br> <a href="javascript:void(0)" onclick="logout()">登出</a>
+                                Username：${sessionScope.user.userNickname}
+                                <br> <a href="javascript:void(0)" onclick="logout()">Log out</a>
                             </div>
                         </c:if>
                         <p class="comment-form-comment">
@@ -293,7 +293,7 @@
                         </div>
                         <div class="clear"></div>
                         <p class="form-submit">
-                            <input id="submit" name="submit" type="button" tabindex="5" value="提交评论" onclick="javascript:$('#submit').prop('disabled',true);$.ajax({type:'POST',url:'/comment',contentType:'application/x-www-form-urlencoded; charset=utf-8',data:$('#comment_form').serialize(),success:function(data){if(data.code==0){layer.msg('评论成功！');$('#comment').val('');$('#cancel-comment-reply-link').hide();$('input[name=commentPid]').attr('value',0);$('input[name=commentPname]').attr('value','');$('#reply-title-word').html('发表评论');}else{layer.msg(data.msg||'评论提交失败！');}$('#submit').prop('disabled',false);},error:function(){layer.msg('评论提交失败，请稍后再试！');$('#submit').prop('disabled',false);}});">
+                            <input id="submit" name="submit" type="button" tabindex="5" value="Comment" onclick="javascript:$('#submit').prop('disabled',true);$.ajax({type:'POST',url:'/comment',contentType:'application/x-www-form-urlencoded; charset=utf-8',data:$('#comment_form').serialize(),success:function(data){if(data.code==0){layer.msg('评论成功！');$('#comment').val('');$('#cancel-comment-reply-link').hide();$('input[name=commentPid]').attr('value',0);$('input[name=commentPname]').attr('value','');$('#reply-title-word').html('Comment');}else{layer.msg(data.msg||'评论提交失败！');}$('#submit').prop('disabled',false);},error:function(){layer.msg('评论提交失败，请稍后再试！');$('#submit').prop('disabled',false);}});">
                             <input type="hidden" name="commentArticleId"
                                    value="${article.articleId}" id="article_id">
                             <input type="hidden" name="commentPid" id="comment_pid" value="0">
@@ -316,7 +316,7 @@
                                         <c:if test="${c.commentRole == 1}">
                                             <i class="fa fa-black-tie" style="color: #c40000;"></i>
                                             <span class=""
-                                                  style="margin-top: 2px!important;color: #c40000;font-size: 13px;;"><b>博主</b></span>
+                                                  style="margin-top: 2px!important;color: #c40000;font-size: 13px;;"><b>Blogger</b></span>
                                         </c:if>
                                         <span class="comment-meta commentmetadata">
                                             <span class="ua-info" style="display: inline;">
@@ -326,12 +326,12 @@
                                                         <a rel="nofollow" class="comment-reply-link" href="javascript:void(0)" onclick="var commentBody=$(this).closest('.comment-body');var commentId=commentBody.attr('id').replace('div-comment-','');var commentAuthorName=commentBody.find('strong').first().text().trim();$('#reply-title-word').html('回复给 '+commentAuthorName);$('#comment_pid').val(commentId);$('input[name=commentPid]').attr('value',commentId);$('input[name=commentPname]').attr('value',commentAuthorName);$('#cancel-comment-reply-link').show();$('html,body').animate({scrollTop:$('#respond').offset().top},500);return false;">回复</a>
                                                     </span>
                                                     <fmt:formatDate value="${c.commentCreateTime}"
-                                                                    pattern="yyyy年MM月dd日 HH:mm:ss"/>&nbsp;
+                                                                    pattern="yyyy/MM/dd HH:mm:ss"/>&nbsp;
                                                     <c:if test="${sessionScope.user.userId eq c.commentUserId || sessionScope.user.userId eq article.articleUserId}">
-                                                        <a href="javascript:void(0)" class="comment-delete-link" onclick="deleteComment(${c.commentId})">删除</a>
-                                                        <a href="javascript:void(0)" class="comment-edit-link" onclick="editComment(${c.commentId})">编辑</a>
+                                                        <a href="javascript:void(0)" class="comment-delete-link" onclick="deleteComment(${c.commentId})">Delete</a>
+                                                        <a href="javascript:void(0)" class="comment-edit-link" onclick="editComment(${c.commentId})">Edit</a>
                                                     </c:if>
-                                                    <span class="floor"> &nbsp;${c.commentFloor}楼 </span>
+                                                    <span class="floor"> &nbsp;${c.commentFloor} floor </span>
                                                 </span>
                                             </span>
                                         </span>
@@ -358,7 +358,7 @@
                                                         <c:if test="${c2.commentRole==1}">
                                                             <i class="fa fa-black-tie" style="color: #c40000;"></i>
                                                             <span class=""
-                                                                  style="margin-top: 2px!important;color: #c40000;font-size: 13px;;"><b>博主</b></span>
+                                                                  style="margin-top: 2px!important;color: #c40000;font-size: 13px;;"><b>Blogger</b></span>
                                                         </c:if>
                                                         <span class="comment-meta">
                                                     <span class="ua-info" style="display: inline;">
@@ -368,12 +368,12 @@
                                                             <a rel="nofollow" class="comment-reply-link" href="javascript:void(0)" onclick="var commentBody=$(this).closest('.comment-body');var commentId=commentBody.attr('id').replace('div-comment-','');var commentAuthorName=commentBody.find('strong').first().text().trim();$('#reply-title-word').html('回复给 '+commentAuthorName);$('#comment_pid').val(commentId);$('input[name=commentPid]').attr('value',commentId);$('input[name=commentPname]').attr('value',commentAuthorName);$('#cancel-comment-reply-link').show();$('html,body').animate({scrollTop:$('#respond').offset().top},500);return false;">回复</a>
                                                         </span>
                                                         <fmt:formatDate value="${c2.commentCreateTime}"
-                                                                        pattern="yyyy年MM月dd日 HH:mm:ss"/>&nbsp;
+                                                                        pattern="yyyy/MM/dd HH:mm:ss"/>&nbsp;
                                                         <c:if test="${sessionScope.user.userId eq c2.commentUserId || sessionScope.user.userId eq article.articleUserId}">
-                                                            <a href="javascript:void(0)" class="comment-delete-link" onclick="deleteComment(${c2.commentId})">删除</a>
-                                                            <a href="javascript:void(0)" class="comment-edit-link" onclick="editComment(${c2.commentId})">编辑</a>
+                                                            <a href="javascript:void(0)" class="comment-delete-link" onclick="deleteComment(${c2.commentId})">Delete</a>
+                                                            <a href="javascript:void(0)" class="comment-edit-link" onclick="editComment(${c2.commentId})">Edit</a>
                                                         </c:if>
-                                                        <span class="floor"> &nbsp;${c2.commentFloor}层 </span>
+                                                        <span class="floor"> &nbsp;${c2.commentFloor}floor </span>
                                                     </span>
                                                 </span>
                                                     </span>
@@ -440,7 +440,7 @@
             $("#cancel-comment-reply-link").click(function(e) {
                 e.preventDefault();
                 $(this).hide();
-                $("#reply-title-word").html("发表评论");
+                $("#reply-title-word").html("Add a comment");
                 $("input[name=commentPid]").attr("value", 0);
                 $("input[name=commentPname]").attr("value", "");
                 return false;
@@ -479,7 +479,7 @@
             // 验证表单内容
             var commentContent = $("#comment").val();
             if (!commentContent || commentContent.trim() === "") {
-                layer.msg("评论内容不能为空！");
+                layer.msg("Comments cannot be empty!");
                 return;
             }
             
@@ -502,16 +502,16 @@
                         $("#cancel-comment-reply-link").hide();
                         $("input[name=commentPid]").attr("value", 0);
                         $("input[name=commentPname]").attr("value", "");
-                        $("#reply-title-word").html("发表评论");
+                        $("#reply-title-word").html("Add a comment");
                         
                         // 手动触发一次评论刷新
                         setTimeout(fetchNewComments, 500);
                     } else {
-                        layer.msg(data.msg || "评论提交失败！");
+                        layer.msg(data.msg || "Failed to add a comment!");
                     }
                 },
                 error: function() {
-                    layer.msg("评论提交失败，请稍后再试！");
+                    layer.msg("Failed to add a comment, please try again later!");
                 },
                 complete: function() {
                     // 重置提交状态
@@ -533,7 +533,7 @@
             var commentAuthorName = commentBody.find('strong').first().text().trim();
             
             // 设置回复状态
-            $("#reply-title-word").html("回复给 " + commentAuthorName);
+            $("#reply-title-word").html("Replied to " + commentAuthorName);
             $("#comment_pid").val(commentId);
             $("input[name=commentPname]").attr("value", commentAuthorName);
             $("#cancel-comment-reply-link").show();
@@ -548,7 +548,7 @@
 
         // 删除评论函数
         function deleteComment(id) {
-            if (confirm("确认要删除这条评论吗？")) {
+            if (confirm("Are you sure to delete this comment?")) {
                 $.ajax({
                     async: false,
                     type: "POST",
@@ -564,10 +564,10 @@
                             $(".comment-count").text($(".comment").length);
                         });
                         
-                        layer.msg("评论已删除");
+                        layer.msg("Comment is deleted");
                     },
                     error: function() {
-                        layer.msg("删除评论失败，请稍后再试");
+                        layer.msg("Failed to delete the comment, please try again later!");
                     }
                 });
             }

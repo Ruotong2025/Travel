@@ -7,16 +7,16 @@
 
 
 <rapid:override name="title">
-    <title>搜索结果</title>
+    <title>Search Result</title>
 </rapid:override>
 
 <rapid:override name="breadcrumb">
     <%--面包屑导航 start--%>
     <nav class="breadcrumb">
         <a class="crumbs" href="/">
-            <i class="fa fa-home"></i>首页</a>
+            <i class="fa fa-home"></i>Home</a>
             <i class="fa fa-angle-right"></i>
-        搜索 ${param.keywords} 找到 ${pageInfo.total} 个与之相关的文章
+        Search ${param.keywords} and find ${pageInfo.total} related articles
     </nav>
     <%--面包屑导航 end--%>
 </rapid:override>
@@ -92,7 +92,7 @@
                                                           <i class="fa fa-comment-o"></i>
                                                             <c:choose>
                                                                 <c:when test="${a.articleCommentCount==0}">
-                                                                    发表评论
+                                                                    Comment
                                                                 </c:when>
                                                                 <c:otherwise>
                                                                     ${a.articleCommentCount}

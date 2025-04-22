@@ -19,12 +19,12 @@
     <%--面包屑导航 start--%>
     <nav class="breadcrumb">
         <a class="crumbs" href="/">
-            <i class="fa fa-home"></i>首页
+            <i class="fa fa-home"></i>Home Page
         </a>
         <i class="fa fa-angle-right"></i>
-        创建游记
+        Create Travels
         <i class="fa fa-angle-right"></i>
-        正文
+        Contents
     </nav>
     <%--面包屑导航 end--%>
 </rapid:override>
@@ -37,13 +37,13 @@
         <article class="post" style="min-height: 500px;">
             <header class="entry-header">
                 <h1 class="entry-title">
-                    创建游记
+                    Create Travels
                 </h1>
             </header><!-- .entry-header -->
             <form class="layui-form layui-form-pane" method="post" id="myForm" action="/admin/article/editSubmit">
                 <input type="hidden" name="articleId" value="${article.articleId}">
                 <div class="layui-form-item">
-                    <label class="layui-form-label">标题 <span style="color: #FF5722; ">*</span></label>
+                    <label class="layui-form-label">Title <span style="color: #FF5722; ">*</span></label>
                     <div class="layui-input-block">
                         <input type="text" name="articleTitle" lay-verify="title" id="title" value="${article.articleTitle}"
                                class="layui-input">
@@ -51,29 +51,29 @@
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">目的地 <span style="color: #FF5722; ">*</span></label>
+                    <label class="layui-form-label">Destination <span style="color: #FF5722; ">*</span></label>
                     <div class="layui-input-block">
-                        <input type="text" name="articleDestination" lay-verify="articleDestination" id="destination" autocomplete="off" placeholder="请输入目的地" class="layui-input" value="${article.articleDestination}">
+                        <input type="text" name="articleDestination" lay-verify="articleDestination" id="destination" autocomplete="off" placeholder="Please type in destinations" class="layui-input" value="${article.articleDestination}">
                     </div>
                 </div>
 
                 <div class="layui-form-item" style="display: flex; justify-content: space-between;">
                     <div style="flex: 1; margin-right: 10px;">
-                        <label class="layui-form-label">开始日期 <span style="color: #FF5722;">*</span></label>
+                        <label class="layui-form-label">Start <span style="color: #FF5722;">*</span></label>
                         <div class="layui-input-block">
-                            <input type="text" name="articleStartdate" lay-verify="articleStartdate" id="startDate" autocomplete="off" placeholder="请选择开始日期" class="layui-input" value="${article.articleStartdate}">
+                            <input type="text" name="articleStartdate" lay-verify="articleStartdate" id="startDate" autocomplete="off" placeholder="Choose start date..." class="layui-input" value="${article.articleStartdate}">
                         </div>
                     </div>
                     <div style="flex: 1;">
-                        <label class="layui-form-label">结束日期 <span style="color: #FF5722;">*</span></label>
+                        <label class="layui-form-label">End <span style="color: #FF5722;">*</span></label>
                         <div class="layui-input-block">
-                            <input type="text" name="articleEnddate" lay-verify="articleEnddate" id="endDate" autocomplete="off" placeholder="请选择结束日期" class="layui-input" value="${article.articleEnddate}">
+                            <input type="text" name="articleEnddate" lay-verify="articleEnddate" id="endDate" autocomplete="off" placeholder="Choose end date.." class="layui-input" value="${article.articleEnddate}">
                         </div>
                     </div>
                 </div>
 
                 <div class="layui-form-item layui-form-text">
-                    <label class="layui-form-label">内容 <span style="color: #FF5722; ">*</span></label>
+                    <label class="layui-form-label">Contents <span style="color: #FF5722; ">*</span></label>
                     <div class="layui-input-block">
                 <textarea class="layui-textarea layui-hide" name="articleContent"
                           id="article_content" lay-verify="content">${article.articleContent}</textarea>
@@ -82,11 +82,11 @@
 
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">分类 <span style="color: #FF5722; ">*</span></label>
+                    <label class="layui-form-label">Claasification <span style="color: #FF5722; ">*</span></label>
                     <div class="layui-input-inline">
                         <select name="articleParentCategoryId" id="articleParentCategoryId"
                                 lay-filter="articleParentCategoryId" lay-verify="articleParentCategoryId">
-                            <option value="">一级分类</option>
+                            <option value="">First class</option>
                             <c:forEach items="${categoryList}" var="c">
                                 <c:if test="${c.categoryPid == 0}">
                                     <option value="${c.categoryId}"
@@ -111,7 +111,7 @@
                 </div>
 
                 <div class="layui-form-item" pane="">
-                    <label class="layui-form-label">标签<span style="color: #FF5722;">*</span></label>
+                    <label class="layui-form-label">Label<span style="color: #FF5722;">*</span></label>
                     <div class="layui-input-block">
                         <c:forEach items="${tagList}" var="t">
                             <input type="checkbox" name="articleTagIds" lay-verify="articleTagIds" lay-skin="primary" title="${t.tagName}"
@@ -139,24 +139,24 @@
                                      height="100">
                                 <p id="demoText"></p>
                             </div>
-                            <button type="button" class="layui-btn" id="test1">上传图片</button>
+                            <button type="button" class="layui-btn" id="test1">Upload images</button>
                             <input type="hidden" name="articleThumbnail" id="articleThumbnail" lay-verify="articleThumbnail" value="${article.articleThumbnail}" >
                         </div>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">状态</label>
+                    <label class="layui-form-label">State</label>
                     <div class="layui-input-block">
-                        <input type="radio" name="articleStatus" value="1" title="发布"
+                        <input type="radio" name="articleStatus" value="1" title="Publish"
                                <c:if test="${article.articleStatus==1}">checked</c:if>>
-                        <input type="radio" name="articleStatus" value="0" title="草稿"
+                        <input type="radio" name="articleStatus" value="0" title="Draft"
                                <c:if test="${article.articleStatus==0}">checked</c:if>>
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <div class="layui-input-block">
-                        <button class="layui-btn" lay-submit="" lay-filter="demo1">保存</button>
-                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        <button class="layui-btn" lay-submit="" lay-filter="demo1">Save</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">Reset</button>
                     </div>
                 </div>
             </form>

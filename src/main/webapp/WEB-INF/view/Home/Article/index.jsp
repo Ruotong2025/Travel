@@ -19,7 +19,7 @@
     <%--面包屑导航 start--%>
     <nav class="breadcrumb">
         <a class="crumbs" href="/">
-            <i class="fa fa-home"></i>首页
+            <i class="fa fa-home"></i>Home
         </a>
         <i class="fa fa-angle-right"></i>
         创建游记
@@ -91,7 +91,7 @@
                                 <td>
                                     <div style="display: flex; gap: 6px;">
                                         <a href="/admin/article/edit/${a.articleId}"
-                                           class="layui-btn layui-btn-mini">编辑</a>
+                                           class="layui-btn layui-btn-mini">Edit</a>
                                         <a href="javascript:void(0)"
                                            onclick="deleteArticle(${a.articleId})"
                                            class="layui-btn layui-btn-danger layui-btn-mini">删除</a>

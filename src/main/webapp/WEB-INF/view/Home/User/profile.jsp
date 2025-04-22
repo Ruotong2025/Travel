@@ -50,7 +50,7 @@
                 <form class="layui-form" action="/admin/profile/save" id="userForm"
                       method="post">
                     <div class="layui-form-item">
-                        <a class="layui-btn layui-btn-primary"  href="/home/profile/edit">编辑</a>
+                        <a class="layui-btn layui-btn-primary"  href="/home/profile/edit">Edit</a>
                         <label class="layui-form-label">头像</label>
                         <div class="layui-input-inline">
                             <div class="layui-upload">

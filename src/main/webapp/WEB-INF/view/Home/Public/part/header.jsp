@@ -74,7 +74,7 @@
                             <li>
                                 <a href="/article">
                                     <i class="fa-home fa"></i>
-                                    <span class="font-text">首页</span>
+                                    <span class="font-text">Home</span>
                                 </a>
                             </li>
 
@@ -125,8 +125,8 @@
     <div class="searchbar">
         <form method="get" id="searchform" action="/search" accept-charset="UTF-8">
             <span>
-                <input type="text" name="keywords" id="s" placeholder="输入标题或目的地搜索" value="${param.keywords}"required="">
-                <button type="submit" id="searchsubmit">搜索</button>
+                <input type="text" name="keywords" id="s" placeholder="Type your destination..." value="${param.keywords}"required="">
+                <button type="submit" id="searchsubmit">Search</button>
             </span>
         </form>
     </div>

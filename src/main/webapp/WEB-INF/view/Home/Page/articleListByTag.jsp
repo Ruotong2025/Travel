@@ -95,7 +95,7 @@
                                                           <i class="fa fa-comment-o"></i>
                                                             <c:choose>
                                                                 <c:when test="${a.articleCommentCount==0}">
-                                                                    发表评论
+                                                                    Comment
                                                                 </c:when>
                                                                 <c:otherwise>
                                                                     ${a.articleCommentCount}

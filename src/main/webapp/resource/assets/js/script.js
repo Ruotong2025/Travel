@@ -287,7 +287,7 @@ $("#cancel-comment-reply-link").click(function () {
     $("#cancel-comment-reply-link").hide();
     $("input[name=commentPid]").attr("value", 0);
     $("input[name=commentPname]").attr("value", "");
-    $("#reply-title-word").html("发表评论");
+    $("#reply-title-word").html("Comment");
 })
 
 //文章浏览量+1

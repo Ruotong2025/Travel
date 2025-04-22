@@ -61,7 +61,7 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: #666; white-space: nowrap; font-weight: bold;">
                         <!-- 目的地居中 -->
                         <div style="text-align: left; flex: 1;">
-                            目的地：${a.articleDestination}
+                            Destination：${a.articleDestination}
                         </div>
 
                         <!-- 日期右对齐，不换行 -->
@@ -98,7 +98,7 @@
                         </span>
                         <span class="entry-meta">
                             <span class="date">
-                                <fmt:formatDate value="${a.articleCreateTime}" pattern="yyyy年MM月dd日"/>
+                                <fmt:formatDate value="${a.articleCreateTime}" pattern="yyyy/MM/dd"/>
                             &nbsp;&nbsp;
                             </span>
                             <span class="views">
@@ -110,7 +110,7 @@
                                   <i class="fa fa-comment-o"></i>
                                     <c:choose>
                                         <c:when test="${a.articleCommentCount == 0}">
-                                            发表评论
+                                            Comment
                                         </c:when>
                                         <c:otherwise>
                                             ${a.articleCommentCount}
@@ -126,7 +126,7 @@
                     <span class="entry-more">
                         <a href="/article/${a.articleId}"
                            rel="bookmark">
-                            阅读全文
+                            Whole Text
                         </a>
                     </span>
                 </article>

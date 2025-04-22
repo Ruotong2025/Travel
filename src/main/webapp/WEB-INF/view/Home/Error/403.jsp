@@ -44,10 +44,10 @@
                     </ol>
                 </div>
                 <div>
-                    <h4>可以尝试：</h4>
+                    <h4>Try：</h4>
                     <ol>
-                        <li><a href="/">返回首页</a></li>
-                        <li><a href="https://travel.com/message.html">留言反馈</a></li>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="https://travel.com/message.html">Feedback</a></li>
                     </ol>
                 </div>
             </div>

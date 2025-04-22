@@ -13,8 +13,8 @@
         <aside class="widget widget_search">
             <div class="searchbar">
                 <form method="get" id="searchform1" action="/search">
-                    <span> <input type="text" name="keywords" id="s1" placeholder="输入标题或目的地搜索" value="${param.keywords}" required="">
-                        <button type="submit" id="searchsubmit1">搜索</button>
+                    <span> <input type="text" name="keywords" id="s1" placeholder="Type your destination..." value="${param.keywords}" required="">
+                        <button type="submit" id="searchsubmit1">Search</button>
                     </span>
                 </form>
             </div>
@@ -25,7 +25,7 @@
         <%--热评文章 start--%>
         <aside class="widget hot_comment" >
             <h3 class="widget-title">
-                <i class="fa fa-bars"></i>热评文章
+                <i class="fa fa-bars"></i>Popular articles
             </h3>
             <div id="hot_comment_widget">
                 <ul>
@@ -45,7 +45,7 @@
         <%--所有标签 start--%>
         <aside class="widget">
             <h3 class="widget-title">
-                <i class="fa fa-bars"></i>所有标签
+                <i class="fa fa-bars"></i>Tags
             </h3>
             <div class="tagcloud">
                 <c:forEach items="${allTagList}" var="t">
@@ -64,7 +64,7 @@
         <%--旅游网站主体-右侧侧边栏-随机文章 start--%>
         <aside id="random_post-7" class="widget random_post wow fadeInUp" data-wow-delay="0.3s">
             <h3 class="widget-title">
-                <i class="fa fa-bars"></i>随机文章
+                <i class="fa fa-bars"></i>Randome articles
             </h3>
             <div id="random_post_widget">
                 <ul>
