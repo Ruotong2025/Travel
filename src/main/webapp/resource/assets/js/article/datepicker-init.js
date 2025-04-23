@@ -5,7 +5,7 @@
 $(function() {
     // 初始化开始日期选择器
     $("#startDate").datepicker({
-        dateFormat: "yy-mm-dd",
+        dateFormat: "yy-mm-dd",    // jQuery UI datepicker format (yy = 4-digit year)
         changeMonth: true,
         changeYear: true,
         yearRange: "2000:+10",
@@ -17,7 +17,7 @@ $(function() {
     
     // 初始化结束日期选择器
     $("#endDate").datepicker({
-        dateFormat: "yy-mm-dd",
+        dateFormat: "yy-mm-dd",    // jQuery UI datepicker format (yy = 4-digit year)
         changeMonth: true,
         changeYear: true,
         yearRange: "2000:+10"

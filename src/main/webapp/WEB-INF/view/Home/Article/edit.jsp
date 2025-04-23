@@ -61,13 +61,13 @@
                     <div style="flex: 1; margin-right: 10px;">
                         <label class="layui-form-label">Start <span style="color: #FF5722;">*</span></label>
                         <div class="layui-input-block">
-                            <input type="text" name="articleStartdate" lay-verify="articleStartdate" id="startDate" autocomplete="off" placeholder="Choose start date..." class="layui-input" value="${article.articleStartdate}">
+                            <input type="text" name="articleStartdate" lay-verify="articleStartdate" id="startDate" autocomplete="off" placeholder="Choose start date..." class="layui-input" value="<fmt:formatDate value="${article.articleStartdate}" pattern="yyyy-MM-dd"/>">
                         </div>
                     </div>
                     <div style="flex: 1;">
                         <label class="layui-form-label">End <span style="color: #FF5722;">*</span></label>
                         <div class="layui-input-block">
-                            <input type="text" name="articleEnddate" lay-verify="articleEnddate" id="endDate" autocomplete="off" placeholder="Choose end date.." class="layui-input" value="${article.articleEnddate}">
+                            <input type="text" name="articleEnddate" lay-verify="articleEnddate" id="endDate" autocomplete="off" placeholder="Choose end date.." class="layui-input" value="<fmt:formatDate value="${article.articleEnddate}" pattern="yyyy-MM-dd"/>">
                         </div>
                     </div>
                 </div>
