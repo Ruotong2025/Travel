@@ -11,7 +11,6 @@
 | Spring MVC        | 4.3.19.RELEASE        |
 | MyBatis           | 3.4.x/3.5.x           |
 | MySQL             | 5.7+/8.0              |
-| Redis             | 5.x+/6.x              |
 
 ### 前端技术
 | 技术              | 说明                   |
