@@ -14,19 +14,19 @@
 </rapid:override>
 
 <rapid:override name="title">
-    <title>文章归档--${options.optionSiteTitle}</title>
+    <title>Article Archive--${options.optionSiteTitle}</title>
 </rapid:override>
 
 <rapid:override name="breadcrumb">
     <%--面包屑导航 start--%>
     <nav class="breadcrumb">
         <a class="crumbs" href="/">
-            <i class="fa fa-home"></i>首页
+            <i class="fa fa-home"></i>Home
         </a>
         <i class="fa fa-angle-right"></i>
-        文章归档
+        Article Archive
         <i class="fa fa-angle-right"></i>
-        正文
+        Content
     </nav>
     <%--面包屑导航 end--%>
 </rapid:override>

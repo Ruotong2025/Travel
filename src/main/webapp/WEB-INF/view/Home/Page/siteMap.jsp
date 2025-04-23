@@ -6,15 +6,15 @@
 <%@ taglib prefix="rapid" uri="http://www.rapid-framework.org.cn/rapid" %>
 
 <rapid:override name="description">
-    <meta name="description" content="站点地图"/>
+    <meta name="description" content="Site Map"/>
 </rapid:override>
 
 <rapid:override name="keywords">
-    <meta name="keywords" content="站点地图"/>
+    <meta name="keywords" content="Site Map"/>
 </rapid:override>
 
 <rapid:override name="title">
-    <title>站点地图</title>
+    <title>Site Map</title>
 </rapid:override>
 
 <rapid:override name="header-style">
@@ -25,12 +25,12 @@
     <%--面包屑导航 start--%>
     <nav class="breadcrumb">
         <a class="crumbs" href="/">
-            <i class="fa fa-home"></i>首页
+            <i class="fa fa-home"></i>Home
         </a>
         <i class="fa fa-angle-right"></i>
-        站点地图
+        Site Map
         <i class="fa fa-angle-right"></i>
-        正文
+        content
     </nav>
     <%--面包屑导航 end--%>
 </rapid:override>
@@ -41,7 +41,7 @@
         <main id="main" class="site-main" role="main">
             <div class="layui-collapse">
                 <div class="layui-colla-item">
-                    <h2 class="layui-colla-title">文章列表</h2>
+                    <h2 class="layui-colla-title">Ariticle List</h2>
                     <div class="layui-colla-content layui-show">
                         <ul>
                             <c:forEach items="${articleList}" var="a">
