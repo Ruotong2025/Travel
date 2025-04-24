@@ -72,7 +72,10 @@ Location: `TravelTribe\src\main\resources\db.properties`
 ## Database SQL File
 Location: `TravelTribe\src\main\resources\db\migration\travel_tribe.sql`
 
-![图片描述](uploads/img.png)
+
+## Tomcat
+![img_1.png](img_1.png)
+![img.png](img.png)
 
 ### 2. Maven配置
 ```xml
