@@ -1,66 +1,76 @@
-# 技术架构文档
+Here is the **full English translation** of your technical architecture document:
 
-## 技术栈版本
+---
 
-### 后端技术
-| 组件               | 版本/说明               |
-|--------------------|------------------------|
-| JDK               | 1.8.x (一定 不然版本冲突)           |
-| Apache Tomcat     | 9.0.102（一定 不然版本冲突）                |
-| Spring Framework  | 4.3.19.RELEASE        |
-| Spring MVC        | 4.3.19.RELEASE        |
-| MyBatis           | 3.4.x/3.5.x           |
-| MySQL             | 5.7+/8.0              |
+# Technical Architecture Document
 
-### 前端技术
-| 技术              | 说明                   |
-|-------------------|------------------------|
-| HTML5            | 页面结构               |
-| CSS3             | 样式设计               |
-| JavaScript       | ES5/ES6                |
-| AJAX             | 异步通信               |
-| Bootstrap        | 4.x/5.x (响应式框架)   |
+## Technology Stack Versions
 
-### 开发工具
-| 工具              | 用途                   | 版本/配置说明          |
-|-------------------|------------------------|-----------------------|
-| IntelliJ IDEA    | 开发IDE                | 2021.x+ (Ultimate版) |
-| Apache Maven     | 项目管理               | 3.9.9                |
-| Git              | 版本控制               | 2.x+                 |
-| GitHub           | 代码托管               | -                    |
-| Navicat          | 数据库管理             | Premium 15+          |
-| Apache Tomcat    | 本地开发服务器         | 9.0.102              |
+### Backend Technologies
+| Component           | Version/Description                  |
+|---------------------|--------------------------------------|
+| JDK                 | 1.8.x (Mandatory to avoid conflicts) |
+| Apache Tomcat       | 9.0.102 (Mandatory to avoid conflicts) |
+| Spring Framework    | 4.3.19.RELEASE                       |
+| Spring MVC          | 4.3.19.RELEASE                       |
+| MyBatis             | 3.4.x/3.5.x                          |
+| MySQL               | 5.7+ / 8.0                           |
 
-## IDEA集成Tomcat配置指南
+### Frontend Technologies
+| Technology          | Description                          |
+|---------------------|--------------------------------------|
+| HTML5               | Page structure                       |
+| CSS3                | Styling                              |
+| JavaScript          | ES5 / ES6                            |
+| AJAX                | Asynchronous communication           |
+| Bootstrap           | 4.x / 5.x (Responsive framework)     |
 
-### 1. 运行环境配置
-1. **配置SDK**：
-   - File → Project Structure → SDKs
-   - 添加JDK 1.8路径
+### Development Tools
+| Tool                | Purpose                              | Version/Configuration Description   |
+|---------------------|--------------------------------------|-------------------------------------|
+| IntelliJ IDEA       | IDE for development                  | 2021.x+ (Ultimate edition)          |
+| Apache Maven        | Project management                   | 3.9.9                               |
+| Git                 | Version control                      | 2.x+                                |
+| GitHub              | Code hosting                         | -                                   |
+| Navicat             | Database management                  | Premium 15+                         |
+| Apache Tomcat       | Local development server             | 9.0.102                             |
 
-2. **配置Tomcat**：
-   - Run → Edit Configurations
-   - 点击"+" → 选择Tomcat Server → Local
-   - 指定Tomcat 9.0.102安装目录
-   - 端口配置（默认8080）
+## IntelliJ IDEA - Tomcat Integration Guide
 
-# 项目开发环境配置规范
+### 1. Runtime Environment Configuration
+1. **Configure SDK**:
+   - Go to: File → Project Structure → SDKs
+   - Add path to JDK 1.8
 
-## 一、开发工具要求
-1. **强制使用工具**：
-   - 主IDE：IntelliJ IDEA（推荐2021.3+版本）
-   - 版本控制：Git
-   - 构建工具：Maven 3.9.9
-   - 数据库工具：Navicat Premium
-   - 缓存工具：Redis Desktop Manager
+2. **Configure Tomcat**:
+   - Go to: Run → Edit Configurations
+   - Click "+" → Select "Tomcat Server" → "Local"
+   - Specify the installation directory for Tomcat 9.0.102
+   - Set the port (default: 8080)
 
-## 二、环境配置步骤
+# Project Development Environment Configuration Standards
 
-### 1.tomacat配置要求
-1. Edit Configurations > Tomcat Server > Local
-2. Deployment选项卡：
-   - Application context: 必须设置为 "/"
-   - Deploy at server startup: 选择项目war包
+## 1. Required Development Tools
+1. **Mandatory Tools**:
+   - Main IDE: IntelliJ IDEA (recommended version 2021.3+)
+   - Version Control: Git
+   - Build Tool: Maven 3.9.9
+   - Database Tool: Navicat Premium
+   - Cache Tool: Redis Desktop Manager
+
+## 2. Environment Configuration Steps
+
+### 1. Tomcat Configuration Requirements
+1. Go to: Edit Configurations > Tomcat Server > Local
+2. In the "Deployment" tab:
+   - **Application context**: Must be set to "/"
+   - **Deploy at server startup**: Select the project WAR package
+
+## Database Configuration File
+Location: `TravelTribe\src\main\resources\db.properties`
+
+## Database SQL File
+Location: `TravelTribe\src\main\resources\db\migration\travel_tribe.sql`
 
 ![图片描述](uploads/img.png)
 
