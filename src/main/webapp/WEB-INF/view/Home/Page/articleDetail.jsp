@@ -698,7 +698,7 @@
                 '</span>' +
                 new Date(comment.commentCreateTime).toLocaleString() + '&nbsp;' +
                 deleteButton + ' ' + editButton +
-                '<span class="floor"> &nbsp;' + comment.commentFloor + '楼 </span>' +
+                '<span class="floor"> &nbsp;' + comment.commentFloor + ' floor </span>' +
                 '</span>' +
                 '</span>' +
                 '</span>' +
@@ -754,7 +754,7 @@
                     '</span>' +
                     new Date(comment.commentCreateTime).toLocaleString() + '&nbsp;' +
                     deleteButton + ' ' + editButton +
-                    '<span class="floor"> &nbsp;' + comment.commentFloor + '层 </span>' +
+                    '<span class="floor"> &nbsp;' + comment.commentFloor + ' floor </span>' +
                     '</span>' +
                     '</span>' +
                     '</span>' +
