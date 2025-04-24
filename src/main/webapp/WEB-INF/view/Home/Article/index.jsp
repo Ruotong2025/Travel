@@ -94,7 +94,7 @@
                                            class="layui-btn layui-btn-mini">Edit</a>
                                         <a href="javascript:void(0)"
                                            onclick="deleteArticle(${a.articleId})"
-                                           class="layui-btn layui-btn-danger layui-btn-mini">删除</a>
+                                           class="layui-btn layui-btn-danger layui-btn-mini">Delete</a>
                                     </div>
                                 </td>
                                 <td>${a.articleId}</td>
@@ -118,6 +118,30 @@
     <%@include file="../Public/part/sidebar-3.jsp" %>
 </rapid:override>
 <%--侧边栏 end--%>
+
+<rapid:override name="footer-script">
+<script>
+    function deleteArticle(id) {
+        if (confirm("确定要删除这篇文章吗？")) {
+            $.ajax({
+                type: "POST",
+                url: "/admin/article/delete/" + id,
+                success: function(response) {
+                    if (response.code == 0) {
+                        alert("删除成功！");
+                        window.location.reload();
+                    } else {
+                        alert(response.msg || "删除失败，请稍后重试！");
+                    }
+                },
+                error: function() {
+                    alert("删除请求发送失败，请检查网络连接！");
+                }
+            });
+        }
+    }
+</script>
+</rapid:override>
 
 
 <%@ include file="../Public/framework.jsp" %>
